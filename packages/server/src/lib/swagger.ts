@@ -3,7 +3,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 export const createDocumnet = (app: INestApplication): void => {
   const config = new DocumentBuilder()
-    .setTitle('Emotions')
+    .setTitle('CollabNote')
     .setVersion('1.0.0')
     .build();
 

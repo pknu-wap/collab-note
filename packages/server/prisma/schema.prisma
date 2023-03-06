@@ -1,6 +1,10 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+// pnpm dlx prisma migrate dev --name init
+// pnpm dlx prisma generate
+// pnpm dlx prisma studio
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,7 +15,13 @@ datasource db {
 }
 
 model User {
-  id    Int    @id @default(autoincrement())
-  email String @unique
-  name  String
+  id           Int    @id @default(autoincrement())
+  username     String @unique
+  displayName  String
+  email        String @unique
+  githubLink   String
+  profileImage String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }
