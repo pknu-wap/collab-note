@@ -5,8 +5,8 @@ import { TokenPayload } from './types';
 
 @Injectable()
 export class AuthService {
-  ACCESS_TOKEN_SECRET: string;
-  ACCESS_TOKEN_DURATION: string;
+  private readonly ACCESS_TOKEN_SECRET: string;
+  private readonly ACCESS_TOKEN_DURATION: string;
 
   constructor(
     private readonly jwtService: JwtService,
