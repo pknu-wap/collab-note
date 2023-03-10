@@ -6,10 +6,14 @@ export class UsersService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async getUserById(userId: number) {
-    return this.prismaService.user.findUnique({
+    const user = await this.prismaService.user.findUnique({
       where: {
         id: userId,
       },
     });
+
+    if (!user) return null;
+
+    return user;
   }
 }
