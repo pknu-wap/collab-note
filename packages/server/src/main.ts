@@ -5,6 +5,7 @@ import * as cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import { AppModule } from '~/app.module';
 import { createDocumnet } from '~/lib/swagger';
+import { SocketIoAdapter } from '~/adapters';
 
 const bootstrap = async () => {
   const app = await NestFactory.create(AppModule);
@@ -29,9 +30,9 @@ const bootstrap = async () => {
     }),
   );
 
-  // if (process.env.NODE_ENV !== 'production') {
-  //   createDocumnet(app);
-  // }
+  app.useWebSocketAdapter(new SocketIoAdapter(app));
+
+  // swagger
   createDocumnet(app);
 
   await app.listen(PORT);
