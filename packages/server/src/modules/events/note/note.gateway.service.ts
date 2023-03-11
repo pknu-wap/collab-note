@@ -1,7 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { SOCKET_EVENT } from '~/common/constants';
-import { SendOfferDto, SendAnswerDto, SendIceCandidateDto } from './dto';
+import {
+  SendOfferDto,
+  SendAnswerDto,
+  SendIceCandidateDto,
+  JoinNoteDto,
+  LeaveNoteDto,
+  NoteChatDto,
+} from './dto';
 
 @Injectable()
 export class NoteGatewayService {
@@ -25,24 +32,49 @@ export class NoteGatewayService {
     this.logger.log(`Client disconnected: ${client.id}`);
   }
 
+  //
+
+  async onJoinNote(client: Socket, dto: JoinNoteDto) {
+    await client.join(dto.noteId);
+    client.to(dto.noteId).emit(SOCKET_EVENT.JOIN_NOTE, {
+      sid: client.id,
+    });
+  }
+
+  async onLeaveNote(client: Socket, dto: LeaveNoteDto) {
+    await client.leave(dto.noteId);
+    client.to(dto.noteId).emit(SOCKET_EVENT.LEAVE_NOTE, {
+      sid: client.id,
+    });
+  }
+
+  onNoteChat(client: Socket, dto: NoteChatDto) {
+    client.to(dto.noteId).emit(SOCKET_EVENT.NOTE_CHAT, {
+      sid: client.id,
+      message: dto.message,
+    });
+  }
+
+  //
+
   onSendOffer(client: Socket, dto: SendOfferDto) {
     client.to(dto.to).emit(SOCKET_EVENT.RECEIVE_OFFER, {
-      offer: dto.offer,
       sid: client.id,
+      offer: dto.offer,
     });
   }
 
   onSendAnswer(client: Socket, dto: SendAnswerDto) {
     client.to(dto.to).emit(SOCKET_EVENT.RECEIVE_ANSWER, {
-      answer: dto.answer,
       sid: client.id,
+      answer: dto.answer,
     });
   }
 
   onSendIceCandidate(client: Socket, dto: SendIceCandidateDto) {
     client.to(dto.to).emit(SOCKET_EVENT.RECEIVE_ICE_CANDIDATE, {
-      candidate: dto.candidate,
       sid: client.id,
+      candidate: dto.candidate,
     });
   }
 }

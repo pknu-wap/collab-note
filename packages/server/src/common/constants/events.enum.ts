@@ -4,6 +4,11 @@ export const SOCKET_EVENT = {
   LEAVE_LOBBY: 'LEAVE_LOBBY',
   LOBBY_CHAT: 'LOBBY_CHAT',
 
+  // Note Socket Events
+  JOIN_NOTE: 'JOIN_NOTE',
+  LEAVE_NOTE: 'LEAVE_NOTE',
+  NOTE_CHAT: 'NOTE_CHAT',
+
   // Note Socket Events - WebRTC
   SEND_OFFER: 'SEND_OFFER',
   RECEIVE_OFFER: 'RECEIVE_OFFER',

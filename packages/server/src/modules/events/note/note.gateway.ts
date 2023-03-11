@@ -7,7 +7,14 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { SOCKET_EVENT } from '~/common/constants';
-import { SendAnswerDto, SendIceCandidateDto, SendOfferDto } from './dto';
+import {
+  JoinNoteDto,
+  LeaveNoteDto,
+  NoteChatDto,
+  SendAnswerDto,
+  SendIceCandidateDto,
+  SendOfferDto,
+} from './dto';
 import { NoteGatewayService } from './note.gateway.service';
 
 @WebSocketGateway({
@@ -31,6 +38,25 @@ export class NoteGateway
   handleDisconnect(client: Socket) {
     this.noteGatewayService.onDisconnect(client);
   }
+
+  // Note Socket
+
+  @SubscribeMessage(SOCKET_EVENT.JOIN_NOTE)
+  async handleJoinNote(client: Socket, dto: JoinNoteDto) {
+    await this.noteGatewayService.onJoinNote(client, dto);
+  }
+
+  @SubscribeMessage(SOCKET_EVENT.LEAVE_NOTE)
+  async handleLeaveNote(client: Socket, dto: LeaveNoteDto) {
+    await this.noteGatewayService.onLeaveNote(client, dto);
+  }
+
+  @SubscribeMessage(SOCKET_EVENT.NOTE_CHAT)
+  handleNoteChat(client: Socket, dto: NoteChatDto) {
+    this.noteGatewayService.onNoteChat(client, dto);
+  }
+
+  // Note WebRTC
 
   @SubscribeMessage(SOCKET_EVENT.SEND_OFFER)
   handleSendOffer(client: Socket, dto: SendOfferDto) {
