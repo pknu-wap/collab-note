@@ -26,11 +26,11 @@ export class LobbyGatewayService {
   }
 
   onJoinLobby(client: Socket) {
-    client.emit(EVENT.JOINED_LOBBY, { message: `Joined Lobby: ${client.id}` });
+    client.emit(EVENT.LOBBY_CHAT, { message: `Joined Lobby: ${client.id}` });
   }
 
   onLeaveLobby(client: Socket) {
-    client.emit(EVENT.LEFT_LOBBY, { message: `Left Lobby: ${client.id}` });
+    client.emit(EVENT.LOBBY_CHAT, { message: `Left Lobby: ${client.id}` });
   }
 
   onLobbyChat(client: Socket, dto: LobbyChatDto) {
