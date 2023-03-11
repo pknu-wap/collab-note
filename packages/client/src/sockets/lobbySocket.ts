@@ -8,13 +8,13 @@ class LobbySocket {
   // The constructor is private, so it can only be called from within the class.
   private constructor() {
     this.socket = io(SOCKET_URL.LOBBY, {
-      transports: ['websocket'],
+      transports: ['websocket', 'polling'],
     });
     this.socket.connect();
   }
 
   static getInstance() {
-    if (!this.instance) {
+    if (this.instance === undefined) {
       this.instance = new LobbySocket();
     }
     return this.instance;
@@ -31,6 +31,7 @@ class LobbySocket {
   receiveMessage({ done }: { done: (message: string) => void }) {
     this.socket.on(SOCKET_EVENT.LOBBY_CHAT, ({ message }) => {
       done(message);
+      console.log(message);
     });
   }
 

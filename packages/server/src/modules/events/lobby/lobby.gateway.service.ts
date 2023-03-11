@@ -26,14 +26,23 @@ export class LobbyGatewayService {
   }
 
   onJoinLobby(client: Socket) {
-    client.emit(EVENT.LOBBY_CHAT, { message: `Joined Lobby: ${client.id}` });
+    // send to all clients in lobby except sender
+    client.broadcast.emit(EVENT.LOBBY_CHAT, {
+      message: `Joined Lobby: ${client.id}`,
+    });
   }
 
   onLeaveLobby(client: Socket) {
-    client.emit(EVENT.LOBBY_CHAT, { message: `Left Lobby: ${client.id}` });
+    // send to all clients in lobby except sender
+    client.broadcast.emit(EVENT.LOBBY_CHAT, {
+      message: `Left Lobby: ${client.id}`,
+    });
   }
 
   onLobbyChat(client: Socket, dto: LobbyChatDto) {
-    client.emit(EVENT.LOBBY_CHAT, { message: `${client.id}: ${dto.message}` });
+    // send to all clients in lobby
+    this.server.emit(EVENT.LOBBY_CHAT, {
+      message: `${client.id}: ${dto.message}`,
+    });
   }
 }

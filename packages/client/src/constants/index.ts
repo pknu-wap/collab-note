@@ -8,7 +8,7 @@ export const PAGE_LIST = {
 } as const;
 
 export const SOCKET_URL = {
-  LOBBY: '/socket/lobby',
+  LOBBY: `${BASE_URL}/socket/lobby`,
 } as const;
 
 export const SOCKET_EVENT = {
