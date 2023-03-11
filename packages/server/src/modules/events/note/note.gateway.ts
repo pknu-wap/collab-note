@@ -2,9 +2,12 @@ import {
   OnGatewayConnection,
   OnGatewayDisconnect,
   OnGatewayInit,
+  SubscribeMessage,
   WebSocketGateway,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { SOCKET_EVENT } from '~/common/constants';
+import { SendAnswerDto, SendIceCandidateDto, SendOfferDto } from './dto';
 import { NoteGatewayService } from './note.gateway.service';
 
 @WebSocketGateway({
@@ -18,14 +21,29 @@ export class NoteGateway
   constructor(private readonly noteGatewayService: NoteGatewayService) {}
 
   afterInit(server: Server) {
-    return this.noteGatewayService.onAterInit(server);
+    this.noteGatewayService.onAterInit(server);
   }
 
   handleConnection(client: Socket) {
-    return this.noteGatewayService.onConnection(client);
+    this.noteGatewayService.onConnection(client);
   }
 
   handleDisconnect(client: Socket) {
-    return this.noteGatewayService.onDisconnect(client);
+    this.noteGatewayService.onDisconnect(client);
+  }
+
+  @SubscribeMessage(SOCKET_EVENT.SEND_OFFER)
+  handleSendOffer(client: Socket, dto: SendOfferDto) {
+    this.noteGatewayService.onSendOffer(client, dto);
+  }
+
+  @SubscribeMessage(SOCKET_EVENT.SEND_ANSWER)
+  handleSendAnswer(client: Socket, dto: SendAnswerDto) {
+    this.noteGatewayService.onSendAnswer(client, dto);
+  }
+
+  @SubscribeMessage(SOCKET_EVENT.SEND_ICE_CANDIDATE)
+  handleSendIceCandidate(client: Socket, dto: SendIceCandidateDto) {
+    this.noteGatewayService.onSendIceCandidate(client, dto);
   }
 }

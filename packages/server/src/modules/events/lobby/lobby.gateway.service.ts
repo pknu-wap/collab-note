@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
-import { EVENT } from '~/common/constants';
+import { SOCKET_EVENT } from '~/common/constants';
 import { LobbyChatDto } from './dto';
 
 @Injectable()
@@ -27,21 +27,21 @@ export class LobbyGatewayService {
 
   onJoinLobby(client: Socket) {
     // send to all clients in lobby except sender
-    client.broadcast.emit(EVENT.LOBBY_CHAT, {
+    client.broadcast.emit(SOCKET_EVENT.LOBBY_CHAT, {
       message: `Joined Lobby: ${client.id}`,
     });
   }
 
   onLeaveLobby(client: Socket) {
     // send to all clients in lobby except sender
-    client.broadcast.emit(EVENT.LOBBY_CHAT, {
+    client.broadcast.emit(SOCKET_EVENT.LOBBY_CHAT, {
       message: `Left Lobby: ${client.id}`,
     });
   }
 
   onLobbyChat(client: Socket, dto: LobbyChatDto) {
     // send to all clients in lobby
-    this.server.emit(EVENT.LOBBY_CHAT, {
+    this.server.emit(SOCKET_EVENT.LOBBY_CHAT, {
       message: `${client.id}: ${dto.message}`,
     });
   }

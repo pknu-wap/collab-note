@@ -1,4 +1,5 @@
 import {
+  MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
   OnGatewayInit,
@@ -6,7 +7,7 @@ import {
   WebSocketGateway,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { EVENT } from '~/common/constants';
+import { SOCKET_EVENT } from '~/common/constants';
 import { LobbyGatewayService } from './lobby.gateway.service';
 import { LobbyChatDto } from './dto';
 
@@ -21,30 +22,30 @@ export class LobbyGateway
   constructor(private readonly lobbyGatewayService: LobbyGatewayService) {}
 
   afterInit(server: Server) {
-    return this.lobbyGatewayService.onAterInit(server);
+    this.lobbyGatewayService.onAterInit(server);
   }
 
   handleConnection(client: Socket) {
-    return this.lobbyGatewayService.onConnection(client);
+    this.lobbyGatewayService.onConnection(client);
   }
 
   handleDisconnect(client: Socket) {
-    return this.lobbyGatewayService.onDisconnect(client);
+    this.lobbyGatewayService.onDisconnect(client);
   }
 
   // Lobby Chat
-  @SubscribeMessage(EVENT.JOIN_LOBBY)
+  @SubscribeMessage(SOCKET_EVENT.JOIN_LOBBY)
   handleJoinLobby(client: Socket) {
-    return this.lobbyGatewayService.onJoinLobby(client);
+    this.lobbyGatewayService.onJoinLobby(client);
   }
 
-  @SubscribeMessage(EVENT.LEAVE_LOBBY)
+  @SubscribeMessage(SOCKET_EVENT.LEAVE_LOBBY)
   handleLeaveLobby(client: Socket) {
-    return this.lobbyGatewayService.onLeaveLobby(client);
+    this.lobbyGatewayService.onLeaveLobby(client);
   }
 
-  @SubscribeMessage(EVENT.LOBBY_CHAT)
-  handleLobbyChat(client: Socket, dto: LobbyChatDto) {
-    return this.lobbyGatewayService.onLobbyChat(client, dto);
+  @SubscribeMessage(SOCKET_EVENT.LOBBY_CHAT)
+  handleLobbyChat(client: Socket, @MessageBody() dto: LobbyChatDto) {
+    this.lobbyGatewayService.onLobbyChat(client, dto);
   }
 }
