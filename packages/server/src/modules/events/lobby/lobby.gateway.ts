@@ -45,7 +45,7 @@ export class LobbyGateway
   }
 
   @SubscribeMessage(SOCKET_EVENT.LOBBY_CHAT)
-  handleLobbyChat(client: Socket, @MessageBody() dto: LobbyChatDto) {
+  handleLobbyChat(client: Socket, dto: LobbyChatDto) {
     this.lobbyGatewayService.onLobbyChat(client, dto);
   }
 }

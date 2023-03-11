@@ -2,45 +2,48 @@ import { Socket, io } from 'socket.io-client';
 import { SOCKET_EVENT, SOCKET_URL } from '~/constants';
 
 class LobbySocket {
-  private static instance: LobbySocket;
-  private socket: Socket;
+  socket: Socket | null;
 
-  // The constructor is private, so it can only be called from within the class.
-  private constructor() {
+  constructor() {
+    this.socket = null;
+  }
+
+  private generateLobbySocket() {
     this.socket = io(SOCKET_URL.LOBBY, {
       transports: ['websocket', 'polling'],
     });
-    this.socket.connect();
   }
 
-  static getInstance() {
-    if (this.instance === undefined) {
-      this.instance = new LobbySocket();
+  initLobbySocket() {
+    if (this.socket === null) {
+      this.generateLobbySocket();
     }
-    return this.instance;
+    this.socket?.connect();
   }
 
   joinLobby() {
-    this.socket.emit(SOCKET_EVENT.JOIN_LOBBY);
+    this.socket?.emit(SOCKET_EVENT.JOIN_LOBBY);
   }
 
   sendMessage({ message }: { message: string }) {
-    this.socket.emit(SOCKET_EVENT.LOBBY_CHAT, { message });
+    this.socket?.emit(SOCKET_EVENT.LOBBY_CHAT, { message });
   }
 
   receiveMessage({ done }: { done: (message: string) => void }) {
-    this.socket.on(SOCKET_EVENT.LOBBY_CHAT, ({ message }) => {
+    this.socket?.on(SOCKET_EVENT.LOBBY_CHAT, ({ message }) => {
       done(message);
-      console.log(message);
     });
   }
 
   leaveLobby() {
-    this.socket.emit(SOCKET_EVENT.LEAVE_LOBBY);
-    this.socket.off(SOCKET_EVENT.LOBBY_CHAT);
-    this.socket.off(SOCKET_EVENT.JOIN_LOBBY);
-    this.socket.off(SOCKET_EVENT.LEAVE_LOBBY);
+    this.socket?.emit(SOCKET_EVENT.LEAVE_LOBBY);
+    this.socket?.off(SOCKET_EVENT.LOBBY_CHAT);
+    this.socket?.off(SOCKET_EVENT.JOIN_LOBBY);
+    this.socket?.off(SOCKET_EVENT.LEAVE_LOBBY);
+    this.socket?.disconnect();
   }
 }
 
-export const lobbySocketInstance = LobbySocket.getInstance();
+const lobbySocket = new LobbySocket();
+
+export default lobbySocket;

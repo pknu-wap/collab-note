@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { lobbySocketInstance } from '~/sockets/lobbySocket';
+import lobbySocket from '~/sockets/lobbySocket';
 import styled from '@emotion/styled';
 
 const HomePage = () => {
@@ -12,12 +12,13 @@ const HomePage = () => {
   };
 
   useEffect(() => {
-    lobbySocketInstance.joinLobby();
-    lobbySocketInstance.receiveMessage({
+    lobbySocket.initLobbySocket();
+    lobbySocket.joinLobby();
+    lobbySocket.receiveMessage({
       done: (message) => setMessages((prev) => [...prev, message]),
     });
     return () => {
-      lobbySocketInstance.leaveLobby();
+      lobbySocket.leaveLobby();
     };
   }, []);
 
@@ -29,7 +30,7 @@ const HomePage = () => {
 
   const handleSubmitMessage = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    lobbySocketInstance.sendMessage({ message: messageInput });
+    lobbySocket.sendMessage({ message: messageInput });
     setMessageInput('');
   };
 

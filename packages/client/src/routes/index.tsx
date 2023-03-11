@@ -7,7 +7,7 @@ const PageRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="/note" element={<NotePage />} />
+      <Route path="/note/:noteId" element={<NotePage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

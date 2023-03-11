@@ -36,20 +36,20 @@ export class NoteGatewayService {
 
   async onJoinNote(client: Socket, dto: JoinNoteDto) {
     await client.join(dto.noteId);
-    client.to(dto.noteId).emit(SOCKET_EVENT.JOIN_NOTE, {
-      sid: client.id,
+    client.to(dto.noteId).emit(SOCKET_EVENT.NOTE_CHAT, {
+      message: `Joined Lobby: ${client.id}`,
     });
   }
 
   async onLeaveNote(client: Socket, dto: LeaveNoteDto) {
     await client.leave(dto.noteId);
-    client.to(dto.noteId).emit(SOCKET_EVENT.LEAVE_NOTE, {
-      sid: client.id,
+    client.to(dto.noteId).emit(SOCKET_EVENT.NOTE_CHAT, {
+      message: `Left Lobby: ${client.id}`,
     });
   }
 
   onNoteChat(client: Socket, dto: NoteChatDto) {
-    client.to(dto.noteId).emit(SOCKET_EVENT.NOTE_CHAT, {
+    this.server.to(dto.noteId).emit(SOCKET_EVENT.NOTE_CHAT, {
       sid: client.id,
       message: dto.message,
     });
