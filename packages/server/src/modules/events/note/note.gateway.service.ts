@@ -51,7 +51,7 @@ export class NoteGatewayService {
   onNoteChat(client: Socket, dto: NoteChatDto) {
     this.server.to(dto.noteId).emit(SOCKET_EVENT.NOTE_CHAT, {
       sid: client.id,
-      message: dto.message,
+      message: `${client.id} ${dto.message}`,
     });
   }
 
