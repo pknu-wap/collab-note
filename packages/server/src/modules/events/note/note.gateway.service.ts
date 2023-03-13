@@ -39,6 +39,11 @@ export class NoteGatewayService {
     client.to(dto.noteId).emit(SOCKET_EVENT.NOTE_CHAT, {
       message: `Joined Lobby: ${client.id}`,
     });
+
+    // WebRTC
+    client.to(dto.noteId).emit(SOCKET_EVENT.NEW_USER, {
+      sid: client.id,
+    });
   }
 
   async onLeaveNote(client: Socket, dto: LeaveNoteDto) {
@@ -58,21 +63,21 @@ export class NoteGatewayService {
   //
 
   onSendOffer(client: Socket, dto: SendOfferDto) {
-    client.to(dto.to).emit(SOCKET_EVENT.RECEIVE_OFFER, {
+    client.to(dto.to).emit(SOCKET_EVENT.RECEIVED_OFFER, {
       sid: client.id,
       offer: dto.offer,
     });
   }
 
   onSendAnswer(client: Socket, dto: SendAnswerDto) {
-    client.to(dto.to).emit(SOCKET_EVENT.RECEIVE_ANSWER, {
+    client.to(dto.to).emit(SOCKET_EVENT.RECEIVED_ANSWER, {
       sid: client.id,
       answer: dto.answer,
     });
   }
 
   onSendIceCandidate(client: Socket, dto: SendIceCandidateDto) {
-    client.to(dto.to).emit(SOCKET_EVENT.RECEIVE_ICE_CANDIDATE, {
+    client.to(dto.to).emit(SOCKET_EVENT.RECEIVED_ICE_CANDIDATE, {
       sid: client.id,
       candidate: dto.candidate,
     });
