@@ -1,8 +1,14 @@
 import { useEffect, useRef } from 'react';
 import { SOCKET_EVENT } from '~/constants';
 import noteSocket from '~/sockets/noteSocket';
+import useConnectedUsersStore from '~/stores/useConnectedUsersStore';
+import useMyMediaStreamStore from '~/stores/useMyMediaStreamStore';
+import useUserStreamsStore from '~/stores/useUserStreamsStore';
 const usePeerConnection = () => {
-  const peerConnectionsRef = useRef<{ [sid: string]: RTCPeerConnection }>({});
+  const { userStreams, setUserStreams } = useUserStreamsStore();
+  const { connectedUsers, setConnectedUsers } = useConnectedUsersStore();
+  const { isMyVideoOn, isMyAudioOn, myMediaStream } = useMyMediaStreamStore();
+  const pcsRef = useRef<{ [sid: string]: RTCPeerConnection }>({});
 
   const RTCConfig = {
     iceServers: [
@@ -19,9 +25,9 @@ const usePeerConnection = () => {
   };
 
   const createPeerConnection = (sid: string) => {
-    const peerConnection = new RTCPeerConnection(RTCConfig);
+    const pc = new RTCPeerConnection(RTCConfig);
 
-    peerConnection.onicecandidate = (event: RTCPeerConnectionIceEvent) => {
+    pc.onicecandidate = (event: RTCPeerConnectionIceEvent) => {
       if (event.candidate) return;
       noteSocket.socket?.emit(SOCKET_EVENT.SEND_ICE_CANDIDATE, {
         to: sid,
@@ -29,36 +35,84 @@ const usePeerConnection = () => {
       });
     };
 
-    peerConnection.ontrack = (event: RTCTrackEvent) => {
+    pc.ontrack = (event: RTCTrackEvent) => {
       const stream = event.streams[0];
-      return;
+      setUserStreams({ sid, stream });
     };
 
-    return peerConnection;
+    myMediaStream?.getTracks().forEach((track) => {
+      pc.addTrack(track, myMediaStream);
+    });
+
+    return pc;
   };
 
-  const createOffer = () => {
-    return;
-  };
-
-  const createAnswer = () => {
-    return;
-  };
-
-  const onNewUser = ({ sid }: { sid: string }) => {
+  const onNewUser = async ({ sid }: { sid: string }) => {
     const pc = createPeerConnection(sid);
+    if (!pc) return;
+
+    setConnectedUsers([...connectedUsers, { sid }]);
+
+    const offer = await pc.createOffer({
+      offerToReceiveAudio: isMyAudioOn,
+      offerToReceiveVideo: isMyVideoOn,
+    });
+    await pc.setLocalDescription(new RTCSessionDescription(offer));
+
+    pcsRef.current = { ...pcsRef.current, [sid]: pc };
+
+    noteSocket.socket?.emit(SOCKET_EVENT.SEND_OFFER, {
+      to: sid,
+      offer,
+    });
   };
 
-  const onReceivedOffer = () => {
-    return;
+  const onReceivedOffer = async ({
+    sid,
+    offer,
+  }: {
+    sid: string;
+    offer: RTCSessionDescriptionInit;
+  }) => {
+    const pc = createPeerConnection(sid);
+    if (!pc) return;
+
+    await pc.setRemoteDescription(new RTCSessionDescription(offer));
+    const answer = await pc.createAnswer();
+    await pc.setLocalDescription(new RTCSessionDescription(answer));
+
+    pcsRef.current = { ...pcsRef.current, [sid]: pc };
+
+    noteSocket.socket?.emit(SOCKET_EVENT.SEND_ANSWER, {
+      to: sid,
+      answer,
+    });
   };
 
-  const onReceivedAnswer = () => {
-    return;
+  const onReceivedAnswer = async ({
+    sid,
+    answer,
+  }: {
+    sid: string;
+    answer: RTCSessionDescriptionInit;
+  }) => {
+    const pc = pcsRef.current?.[sid];
+    if (!pc) return;
+
+    await pc.setRemoteDescription(new RTCSessionDescription(answer));
   };
 
-  const onReceivedIceCandidate = () => {
-    return;
+  const onReceivedIceCandidate = async ({
+    sid,
+    candidate,
+  }: {
+    sid: string;
+    candidate: RTCIceCandidateInit;
+  }) => {
+    const pc = pcsRef.current?.[sid];
+    if (!pc) return;
+
+    await pc.addIceCandidate(new RTCIceCandidate(candidate));
   };
 
   useEffect(() => {
@@ -75,7 +129,7 @@ const usePeerConnection = () => {
       noteSocket.socket?.off(SOCKET_EVENT.RECEIVED_ANSWER);
       noteSocket.socket?.off(SOCKET_EVENT.RECEIVED_ICE_CANDIDATE);
     };
-  }, []);
+  }, [userStreams, myMediaStream]);
 };
 
 export default usePeerConnection;
