@@ -5,10 +5,10 @@ import useConnectedUsersStore from '~/stores/useConnectedUsersStore';
 import useMyMediaStreamStore from '~/stores/useMyMediaStreamStore';
 import useUserStreamsStore from '~/stores/useUserStreamsStore';
 const usePeerConnection = () => {
+  const pcsRef = useRef<{ [sid: string]: RTCPeerConnection }>({});
   const { userStreams, setUserStreams } = useUserStreamsStore();
   const { connectedUsers, setConnectedUsers } = useConnectedUsersStore();
   const { isMyVideoOn, isMyAudioOn, myMediaStream } = useMyMediaStreamStore();
-  const pcsRef = useRef<{ [sid: string]: RTCPeerConnection }>({});
 
   const RTCConfig = {
     iceServers: [
@@ -59,7 +59,7 @@ const usePeerConnection = () => {
     });
     await pc.setLocalDescription(new RTCSessionDescription(offer));
 
-    pcsRef.current = { ...pcsRef.current, [sid]: pc };
+    pcsRef.current[sid] = pc;
 
     noteSocket.socket?.emit(SOCKET_EVENT.SEND_OFFER, {
       to: sid,
@@ -81,7 +81,7 @@ const usePeerConnection = () => {
     const answer = await pc.createAnswer();
     await pc.setLocalDescription(new RTCSessionDescription(answer));
 
-    pcsRef.current = { ...pcsRef.current, [sid]: pc };
+    pcsRef.current[sid] = pc;
 
     noteSocket.socket?.emit(SOCKET_EVENT.SEND_ANSWER, {
       to: sid,

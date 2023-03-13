@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import noteSocket from '~/sockets/noteSocket';
 import styled from '@emotion/styled';
 import { useParams } from 'react-router-dom';
+import NoteVideoContents from '~/components/note/NoteVideoContents';
 
 const NotePage = () => {
   const { noteId } = useParams() as { noteId: string };
@@ -50,13 +51,23 @@ const NotePage = () => {
         />
         <button type="submit">Send</button>
       </ChatForm>
+      <NoteVideoContents noteId={noteId} />
     </Container>
   );
 };
 
+const Container = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 80%;
+  margin: 2rem auto 0;
+`;
+
 const ChatForm = styled.form`
   margin-top: 20px;
-  width: 600px;
+  width: 100%;
   height: 60px;
   display: flex;
   flex-direction: row;
@@ -77,16 +88,8 @@ const ChatContainer = styled.div`
   flex-direction: column;
   border: 1px solid rgba(0, 0, 0, 0.2);
   overflow-y: auto;
-  width: 600px;
+  width: 100%;
   height: 100%;
-`;
-
-const Container = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  margin-top: 2rem;
 `;
 
 const ContentsWrapper = styled.div`
@@ -95,7 +98,7 @@ const ContentsWrapper = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  width: 600px;
+  width: 100%;
   height: 400px;
 `;
 
