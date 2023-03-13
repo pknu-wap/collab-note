@@ -70,14 +70,14 @@ const NoteVideoContents = ({ noteId }: Props) => {
 const Container = styled.div`
   display: flex;
   align-items: center;
+  flex-direction: column;
   justify-content: space-between;
-  width: 100%;
-  gap: 1rem;
+  gap: 10px;
   margin-top: 1rem;
 `;
 
 const BlackScreen = styled.div`
-  width: 150px;
+  width: 200px;
   height: 150px;
   background-color: rgba(0, 0, 0, 0.2);
 `;

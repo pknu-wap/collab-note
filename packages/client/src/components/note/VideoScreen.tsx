@@ -33,7 +33,7 @@ const VideoScreenWrapper = styled.div`
 `;
 
 const Container = styled.video`
-  width: 150px;
+  width: 200px;
   height: 150px;
   background-color: #000;
 `;
@@ -44,6 +44,8 @@ const UserInfo = styled.div`
   color: #fff;
   width: 100%;
   text-align: center;
+  font-size: 1rem;
+  border-top: 3px solid #fff;
 `;
 
 export default VideoScreen;

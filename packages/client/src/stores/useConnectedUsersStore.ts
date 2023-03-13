@@ -11,6 +11,7 @@ type States = {
 
 type Actions = {
   setConnectedUsers: (connectedUsers: ConnectedUserInfo[]) => void;
+  addConnectedUser: (connectedUser: ConnectedUserInfo) => void;
 };
 
 const useConnectedUsersStore = create<States & Actions>((set) => ({
@@ -19,6 +20,12 @@ const useConnectedUsersStore = create<States & Actions>((set) => ({
     set(
       produce((draft: States) => {
         draft.connectedUsers = connectedUsers;
+      }),
+    ),
+  addConnectedUser: (connectedUser) =>
+    set(
+      produce((draft: States) => {
+        draft.connectedUsers.push(connectedUser);
       }),
     ),
 }));

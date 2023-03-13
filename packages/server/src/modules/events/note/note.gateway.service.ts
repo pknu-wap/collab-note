@@ -35,7 +35,24 @@ export class NoteGatewayService {
   //
 
   async onJoinNote(client: Socket, dto: JoinNoteDto) {
+    const getAllNoteUsers = async () => {
+      const noteSockets = await this.server.in(dto.noteId).fetchSockets();
+      return noteSockets.map((noteUser) => {
+        return {
+          sid: noteUser.id,
+        };
+      });
+    };
+
+    const allNoteUsers = await getAllNoteUsers();
+
     await client.join(dto.noteId);
+
+    // Send all existing users to the new user
+    client.emit(SOCKET_EVENT.EXISTING_NOTE_USERS, {
+      users: allNoteUsers,
+    });
+
     client.to(dto.noteId).emit(SOCKET_EVENT.NOTE_CHAT, {
       message: `Joined Lobby: ${client.id}`,
     });

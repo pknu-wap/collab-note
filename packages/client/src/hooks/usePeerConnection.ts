@@ -28,7 +28,7 @@ const usePeerConnection = () => {
     const pc = new RTCPeerConnection(RTCConfig);
 
     pc.onicecandidate = (event: RTCPeerConnectionIceEvent) => {
-      if (event.candidate) return;
+      if (!event.candidate) return;
       noteSocket.socket?.emit(SOCKET_EVENT.SEND_ICE_CANDIDATE, {
         to: sid,
         candidate: event.candidate,

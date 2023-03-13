@@ -3,13 +3,26 @@ import noteSocket from '~/sockets/noteSocket';
 import styled from '@emotion/styled';
 import { useParams } from 'react-router-dom';
 import NoteVideoContents from '~/components/note/NoteVideoContents';
+import usePeerConnection from '~/hooks/usePeerConnection';
+import { SOCKET_EVENT } from '~/constants';
+import useConnectedUsersStore from '~/stores/useConnectedUsersStore';
 
 const NotePage = () => {
   const { noteId } = useParams() as { noteId: string };
 
+  const { connectedUsers, setConnectedUsers, addConnectedUser } =
+    useConnectedUsersStore();
   const [messages, setMessages] = useState<string[]>([]);
   const [messageInput, setMessageInput] = useState<string>('');
   const chatListRef = useRef<HTMLDivElement>(null);
+
+  const handleSubmitMessage = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    noteSocket.sendMessage({ noteId, message: messageInput });
+    setMessageInput('');
+  };
+
+  usePeerConnection();
 
   useEffect(() => {
     noteSocket.initNoteSocket();
@@ -17,6 +30,15 @@ const NotePage = () => {
     noteSocket.receiveMessage({
       done: (message) => setMessages((prev) => [...prev, message]),
     });
+
+    noteSocket.socket?.on(
+      SOCKET_EVENT.EXISTING_NOTE_USERS,
+      ({ users }: { users: { sid: string }[] }) => {
+        users.forEach((user) => {
+          addConnectedUser({ sid: user.sid });
+        });
+      },
+    );
     return () => {
       noteSocket.leaveNote(noteId);
     };
@@ -28,29 +50,25 @@ const NotePage = () => {
     }
   }, [messages]);
 
-  const handleSubmitMessage = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    noteSocket.sendMessage({ noteId, message: messageInput });
-    setMessageInput('');
-  };
-
   return (
     <Container>
-      <ContentsWrapper>
-        <ChatContainer ref={chatListRef}>
-          {messages.map((message) => {
-            return <div key={crypto.randomUUID()}>{message}</div>;
-          })}
-        </ChatContainer>
-      </ContentsWrapper>
-      <ChatForm onSubmit={handleSubmitMessage}>
-        <ChatInput
-          placeholder="Write Message..."
-          onChange={(e) => setMessageInput(e.target.value)}
-          value={messageInput}
-        />
-        <button type="submit">Send</button>
-      </ChatForm>
+      <ChatWrapper>
+        <ContentsWrapper>
+          <ChatContainer ref={chatListRef}>
+            {messages.map((message) => {
+              return <div key={crypto.randomUUID()}>{message}</div>;
+            })}
+          </ChatContainer>
+        </ContentsWrapper>
+        <ChatForm onSubmit={handleSubmitMessage}>
+          <ChatInput
+            placeholder="Write Message..."
+            onChange={(e) => setMessageInput(e.target.value)}
+            value={messageInput}
+          />
+          <button type="submit">Send</button>
+        </ChatForm>
+      </ChatWrapper>
       <NoteVideoContents noteId={noteId} />
     </Container>
   );
@@ -58,11 +76,15 @@ const NotePage = () => {
 
 const Container = styled.div`
   display: flex;
-  align-items: center;
   justify-content: center;
+  gap: 1rem;
+`;
+
+const ChatWrapper = styled.div`
+  display: flex;
   flex-direction: column;
-  width: 80%;
-  margin: 2rem auto 0;
+  height: 100%;
+  width: 50%;
 `;
 
 const ChatForm = styled.form`
@@ -90,6 +112,7 @@ const ChatContainer = styled.div`
   overflow-y: auto;
   width: 100%;
   height: 100%;
+  padding: 20px;
 `;
 
 const ContentsWrapper = styled.div`
@@ -99,7 +122,7 @@ const ContentsWrapper = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  height: 400px;
+  height: 630px;
 `;
 
 export default NotePage;
