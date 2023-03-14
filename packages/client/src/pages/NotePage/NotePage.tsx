@@ -10,8 +10,7 @@ import useConnectedUsersStore from '~/stores/useConnectedUsersStore';
 const NotePage = () => {
   const { noteId } = useParams() as { noteId: string };
 
-  const { connectedUsers, setConnectedUsers, addConnectedUser } =
-    useConnectedUsersStore();
+  const { addConnectedUser } = useConnectedUsersStore();
   const [messages, setMessages] = useState<string[]>([]);
   const [messageInput, setMessageInput] = useState<string>('');
   const chatListRef = useRef<HTMLDivElement>(null);
