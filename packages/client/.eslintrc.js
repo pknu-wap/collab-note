@@ -9,6 +9,7 @@ module.exports = {
     'plugin:react/recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:react-hooks/recommended',
+    'plugin:storybook/recommended',
     'plugin:prettier/recommended',
   ],
   overrides: [],

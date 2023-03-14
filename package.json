@@ -8,6 +8,7 @@
   "author": "neko113 <alstn113@gmail.com>",
   "scripts": {
     "dev": "concurrently \"pnpm --filter client dev\" \"pnpm --filter server start:dev\"",
+    "storybook": "pnpm --filter client storybook",
     "build:client": "pnpm --filter client build",
     "build:server": "pnpm --filter server build",
     "prisma:generate": "pnpm --filter server prisma:generate",
