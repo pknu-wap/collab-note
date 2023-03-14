@@ -14,6 +14,6 @@
 
 ## `Links`
 
-server: not completed
-client-dev: <https://collab-note.vercel.app>
-storybook: <https://collab-note-storybook.vercel.app>
+- server-dev: <https://dev.wap-dev.store>
+- client-dev: <https://collab-note.vercel.app>
+- storybook: <https://collab-note-storybook.vercel.app>
