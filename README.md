@@ -11,3 +11,9 @@
 3. `Testing + Cypress E2E`: End to End Testing Framework.
 4. `Advanced Docker`
 5. `Canvas`
+
+## `Links`
+
+server: not completed
+client-dev: <https://collab-note.vercel.app>
+storybook: <https://collab-note-storybook.vercel.app>
