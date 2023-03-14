@@ -11,6 +11,7 @@
     "storybook": "pnpm --filter client storybook",
     "build:client": "pnpm --filter client build",
     "build:server": "pnpm --filter server build",
+    "start:pm2": "pnpm --filter server start:pm2",
     "prisma:generate": "pnpm --filter server prisma:generate",
     "prisma:studio": "pnpm --filter server prisma:studio",
     "prisma:push": "pnpm --filter server prisma:push",

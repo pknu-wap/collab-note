@@ -10,6 +10,7 @@
     "lint": "eslint \"src/**/*.ts\" --config ./.eslintrc.js --fix",
     "format": "prettier \"src/**/*.ts\" --write",
     "start:dev": "NODE_ENV=development nest start --watch",
+    "start:pm2": "pnpm pm2 start ecosystem.config.js",
     "prisma:generate": "pnpm dlx prisma generate",
     "prisma:studio": "pnpm dlx prisma studio",
     "prisma:push": "pnpm dlx prisma db push"
@@ -47,6 +48,7 @@
     "@types/passport-github2": "^1.2.5",
     "@types/passport-jwt": "^3.0.8",
     "@types/supertest": "^2.0.11",
+    "pm2": "^5.2.2",
     "prisma": "^4.11.0",
     "source-map-support": "^0.5.20",
     "supertest": "^6.1.3",
