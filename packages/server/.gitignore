@@ -1,5 +1,5 @@
 .env
-
+.env.production
 # compiled output
 /dist
 /node_modules
