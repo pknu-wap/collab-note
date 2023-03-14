@@ -7,7 +7,9 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint \"src/**/*.{ts,tsx}\" --config ./.eslintrc.js --fix",
-    "format": "prettier \"src/**/*.{ts,tsx}\" --write"
+    "format": "prettier \"src/**/*.{ts,tsx}\" --write",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@emotion/react": "^11.10.6",
@@ -34,6 +36,15 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "typescript": "^4.9.3",
     "vite": "^4.1.0",
-    "vite-tsconfig-paths": "^4.0.5"
+    "vite-tsconfig-paths": "^4.0.5",
+    "storybook": "^7.0.0-rc.3",
+    "@storybook/react": "^7.0.0-rc.3",
+    "@storybook/react-vite": "^7.0.0-rc.3",
+    "@storybook/addon-links": "^7.0.0-rc.3",
+    "@storybook/addon-essentials": "^7.0.0-rc.3",
+    "@storybook/blocks": "^7.0.0-rc.3",
+    "@storybook/addon-interactions": "^7.0.0-rc.3",
+    "@storybook/testing-library": "^0.0.14-next.1",
+    "prop-types": "^15.8.1"
   }
 }
