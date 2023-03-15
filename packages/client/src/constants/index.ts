@@ -5,6 +5,8 @@ export const API_URL = {} as const;
 
 export const PAGE_LIST = {
   HOME: '/',
+  NOTE: '/note',
+  CRDT: '/crdt',
 } as const;
 
 export const SOCKET_URL = {

@@ -78,7 +78,7 @@ const Container = styled.div`
 
 const BlackScreen = styled.div`
   width: 200px;
-  height: 150px;
+  height: 120px;
   background-color: rgba(0, 0, 0, 0.2);
 `;
 

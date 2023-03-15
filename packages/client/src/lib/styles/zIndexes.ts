@@ -1,1 +1,3 @@
-export const zIndexes = {};
+export const zIndexes = {
+  Header: 20,
+};
