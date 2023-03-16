@@ -8,10 +8,6 @@ export class LobbyGatewayService {
   private server: Server;
   private logger = new Logger('LobbyGatewayService');
 
-  constructor() {
-    //
-  }
-
   onAterInit(server: Server) {
     this.server = server;
     this.logger.log('LobbyGatewayService initialized');

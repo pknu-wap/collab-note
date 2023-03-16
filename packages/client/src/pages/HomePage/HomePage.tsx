@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import lobbySocket from '~/sockets/lobbySocket';
 import styled from '@emotion/styled';
+import { SOCKET_EVENT } from '~/constants';
 
 const HomePage = () => {
   const [messages, setMessages] = useState<string[]>([]);

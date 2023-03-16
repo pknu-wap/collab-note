@@ -4,7 +4,6 @@ import styled from '@emotion/styled';
 import { useParams } from 'react-router-dom';
 import NoteVideoContents from '~/components/note/NoteVideoContents';
 import usePeerConnection from '~/hooks/usePeerConnection';
-import { SOCKET_EVENT } from '~/constants';
 import useConnectedUsersStore from '~/stores/useConnectedUsersStore';
 import useMyMediaStreamStore from '~/stores/useMyMediaStreamStore';
 import useUserStreamsStore from '~/stores/useUserStreamsStore';
@@ -43,25 +42,24 @@ const NotePage = () => {
     noteSocket.receiveMessage({
       done: (message) => setMessages((prev) => [...prev, message]),
     });
-
-    noteSocket.socket?.on(
-      SOCKET_EVENT.EXISTING_NOTE_USERS,
-      ({ users }: { users: { sid: string }[] }) => {
+    noteSocket.receiveExistingNoteUsers({
+      done: (users) => {
         users.forEach((user) => {
+          console.log('existing note user', user);
+
           addConnectedUser({ sid: user.sid });
         });
       },
-    );
-
-    noteSocket.socket?.on(SOCKET_EVENT.LEFT_NOTE, ({ sid }) => {
-      deleteConnectedUser(sid);
-      deleteUserStreams(sid);
-      console.log('left note', sid);
+    });
+    noteSocket.leftNote({
+      done: (sid) => {
+        deleteConnectedUser(sid);
+        deleteUserStreams(sid);
+        console.log('left note', sid);
+      },
     });
 
     return () => {
-      noteSocket.socket?.off(SOCKET_EVENT.EXISTING_NOTE_USERS);
-      noteSocket.socket?.off(SOCKET_EVENT.LEFT_NOTE);
       noteSocket.leaveNote(noteId);
       stopMediaStream();
       setConnectedUsers([]);

@@ -12,8 +12,8 @@ interface Props {
 const NoteVideoContents = ({ noteId }: Props) => {
   const { isMyVideoOn, isMyAudioOn, myMediaStream, setMyMediaStream } =
     useMyMediaStreamStore();
-  const { connectedUsers, setConnectedUsers } = useConnectedUsersStore();
-  const { userStreams, setUserStreams } = useUserStreamsStore();
+  const { connectedUsers } = useConnectedUsersStore();
+  const { userStreams } = useUserStreamsStore();
 
   useEffect(() => {
     const setMediaTracks = async () => {

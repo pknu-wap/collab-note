@@ -35,11 +35,26 @@ class NoteSocket {
     });
   }
 
+  receiveExistingNoteUsers({ done }: ReceiveExistingNoteUsersParams) {
+    this.socket?.on(SOCKET_EVENT.EXISTING_NOTE_USERS, ({ users }) => {
+      done(users);
+    });
+  }
+
+  leftNote({ done }: LeftNoteParams) {
+    this.socket?.on(SOCKET_EVENT.LEFT_NOTE, ({ sid }) => {
+      done(sid);
+    });
+  }
+
   leaveNote(noteId: string) {
+    console.log('leaveNote');
     this.socket?.emit(SOCKET_EVENT.LEAVE_NOTE, { noteId });
     this.socket?.off(SOCKET_EVENT.NOTE_CHAT);
     this.socket?.off(SOCKET_EVENT.JOIN_NOTE);
     this.socket?.off(SOCKET_EVENT.LEAVE_NOTE);
+    this.socket?.off(SOCKET_EVENT.EXISTING_NOTE_USERS);
+    this.socket?.off(SOCKET_EVENT.LEFT_NOTE);
     this.socket?.disconnect();
   }
 }
@@ -55,4 +70,12 @@ interface SendMessageParams {
 
 interface ReceiveMessageParams {
   done: (message: string) => void;
+}
+
+interface ReceiveExistingNoteUsersParams {
+  done: (users: { sid: string }[]) => void;
+}
+
+interface LeftNoteParams {
+  done: (sid: string) => void;
 }
