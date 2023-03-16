@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
+import { RemoteDeleteDto, RemoteInsertDto, RemoteUpdateDto } from './dto';
 
 @Injectable()
 export class CrdtGatewayService {
@@ -21,5 +22,17 @@ export class CrdtGatewayService {
 
   onDisconnect(client: Socket) {
     this.logger.log(`Client disconnected: ${client.id}`);
+  }
+
+  onRemoteInsert(client: Socket, dto: RemoteInsertDto) {
+    return;
+  }
+
+  onRemoteDelete(client: Socket, dto: RemoteDeleteDto) {
+    return;
+  }
+
+  onRemoteUpdate(client: Socket, dto: RemoteUpdateDto) {
+    return;
   }
 }
