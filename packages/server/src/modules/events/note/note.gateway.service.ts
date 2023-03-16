@@ -25,7 +25,36 @@ export class NoteGatewayService {
   }
 
   onConnection(client: Socket) {
-    this.logger.log(`Client connected: ${client.id}`);
+    try {
+      this.logger.log(`Client connected: ${client.id}`);
+    } catch (error) {
+      this.logger.error(error);
+    }
+
+    client.on('disconnecting', () => this.onDisconnecting(client));
+  }
+
+  private onDisconnecting(client: Socket) {
+    const roomsToLeave: Set<string> = this.server.adapter['sids'].get(
+      client.id,
+    );
+
+    // filtering out the client's own room(default room)
+    const rooms = Array.from(roomsToLeave).filter((room) => room !== client.id);
+
+    if (!roomsToLeave) return;
+
+    rooms.forEach(async (room) => {
+      await client.leave(room);
+
+      client.to(room).emit(SOCKET_EVENT.NOTE_CHAT, {
+        message: `Left Note: ${client.id}`,
+      });
+
+      client.to(room).emit(SOCKET_EVENT.LEFT_NOTE, {
+        sid: client.id,
+      });
+    });
   }
 
   onDisconnect(client: Socket) {
@@ -54,7 +83,7 @@ export class NoteGatewayService {
     });
 
     client.to(dto.noteId).emit(SOCKET_EVENT.NOTE_CHAT, {
-      message: `Joined Lobby: ${client.id}`,
+      message: `Joined Note: ${client.id}`,
     });
 
     // WebRTC
@@ -66,7 +95,7 @@ export class NoteGatewayService {
   async onLeaveNote(client: Socket, dto: LeaveNoteDto) {
     await client.leave(dto.noteId);
     client.to(dto.noteId).emit(SOCKET_EVENT.NOTE_CHAT, {
-      message: `Left Lobby: ${client.id}`,
+      message: `Left Note: ${client.id}`,
     });
   }
 

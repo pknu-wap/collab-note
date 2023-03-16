@@ -18,13 +18,22 @@ export class LobbyGatewayService {
   }
 
   onConnection(client: Socket) {
-    this.logger.log(`Client connected: ${client.id}`);
+    try {
+      this.logger.log(`Client connected: ${client.id}`);
+    } catch (error) {
+      this.logger.error(error);
+    }
+
+    client.on('disconnecting', () => this.onDisconnecting(client));
   }
 
-  onDisconnect(client: Socket) {
+  private onDisconnecting(client: Socket) {
     client.broadcast.emit(SOCKET_EVENT.LOBBY_CHAT, {
       message: `Left Lobby: ${client.id}`,
     });
+  }
+
+  onDisconnect(client: Socket) {
     this.logger.log(`Client disconnected: ${client.id}`);
   }
 
