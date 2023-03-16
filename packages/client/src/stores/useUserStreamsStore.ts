@@ -2,7 +2,7 @@ import produce from 'immer';
 import { create } from 'zustand';
 
 type States = {
-  userStreams: { [key: string]: MediaStream | null };
+  userStreams: { [sid: string]: MediaStream | null };
 };
 
 type Actions = {
@@ -13,6 +13,8 @@ type Actions = {
     sid: string;
     stream: MediaStream;
   }) => void;
+  setUserStreamsEmpty: () => void;
+  deleteUserStreams: (sid: string) => void;
 };
 
 const useUserStreamsStore = create<States & Actions>((set) => ({
@@ -21,6 +23,20 @@ const useUserStreamsStore = create<States & Actions>((set) => ({
     set(
       produce((draft: States) => {
         draft.userStreams[sid] = stream;
+      }),
+    );
+  },
+  deleteUserStreams: (sid: string) => {
+    set(
+      produce((draft: States) => {
+        delete draft.userStreams[sid];
+      }),
+    );
+  },
+  setUserStreamsEmpty: () => {
+    set(
+      produce((draft: States) => {
+        draft.userStreams = {};
       }),
     );
   },

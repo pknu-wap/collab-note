@@ -97,6 +97,9 @@ export class NoteGatewayService {
     client.to(dto.noteId).emit(SOCKET_EVENT.NOTE_CHAT, {
       message: `Left Note: ${client.id}`,
     });
+    client.to(dto.noteId).emit(SOCKET_EVENT.LEFT_NOTE, {
+      sid: client.id,
+    });
   }
 
   onNoteChat(client: Socket, dto: NoteChatDto) {

@@ -12,6 +12,7 @@ type States = {
 type Actions = {
   setConnectedUsers: (connectedUsers: ConnectedUserInfo[]) => void;
   addConnectedUser: (connectedUser: ConnectedUserInfo) => void;
+  deleteConnectedUser: (sid: string) => void;
 };
 
 const useConnectedUsersStore = create<States & Actions>((set) => ({
@@ -26,6 +27,14 @@ const useConnectedUsersStore = create<States & Actions>((set) => ({
     set(
       produce((draft: States) => {
         draft.connectedUsers.push(connectedUser);
+      }),
+    ),
+  deleteConnectedUser: (sid) =>
+    set(
+      produce((draft: States) => {
+        draft.connectedUsers = draft.connectedUsers.filter(
+          (user) => user.sid !== sid,
+        );
       }),
     ),
 }));

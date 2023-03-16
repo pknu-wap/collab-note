@@ -6,11 +6,16 @@ import NoteVideoContents from '~/components/note/NoteVideoContents';
 import usePeerConnection from '~/hooks/usePeerConnection';
 import { SOCKET_EVENT } from '~/constants';
 import useConnectedUsersStore from '~/stores/useConnectedUsersStore';
+import useMyMediaStreamStore from '~/stores/useMyMediaStreamStore';
+import useUserStreamsStore from '~/stores/useUserStreamsStore';
 
 const NotePage = () => {
   const { noteId } = useParams() as { noteId: string };
 
-  const { addConnectedUser } = useConnectedUsersStore();
+  const { addConnectedUser, setConnectedUsers, deleteConnectedUser } =
+    useConnectedUsersStore();
+  const { myMediaStream, setMyMediaStream } = useMyMediaStreamStore();
+  const { setUserStreamsEmpty, deleteUserStreams } = useUserStreamsStore();
   const [messages, setMessages] = useState<string[]>([]);
   const [messageInput, setMessageInput] = useState<string>('');
   const chatListRef = useRef<HTMLDivElement>(null);
@@ -19,6 +24,15 @@ const NotePage = () => {
     e.preventDefault();
     noteSocket.sendMessage({ noteId, message: messageInput });
     setMessageInput('');
+  };
+
+  const stopMediaStream = () => {
+    if (!myMediaStream) return;
+    console.log('stop media stream');
+    myMediaStream.getTracks().forEach((track) => {
+      track.stop();
+    });
+    setMyMediaStream(null);
   };
 
   usePeerConnection();
@@ -38,8 +52,20 @@ const NotePage = () => {
         });
       },
     );
+
+    noteSocket.socket?.on(SOCKET_EVENT.LEFT_NOTE, ({ sid }) => {
+      deleteConnectedUser(sid);
+      deleteUserStreams(sid);
+      console.log('left note', sid);
+    });
+
     return () => {
+      noteSocket.socket?.off(SOCKET_EVENT.EXISTING_NOTE_USERS);
+      noteSocket.socket?.off(SOCKET_EVENT.LEFT_NOTE);
       noteSocket.leaveNote(noteId);
+      stopMediaStream();
+      setConnectedUsers([]);
+      setUserStreamsEmpty();
     };
   }, [noteId]);
 

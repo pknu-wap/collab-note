@@ -128,6 +128,15 @@ const usePeerConnection = () => {
       noteSocket.socket?.off(SOCKET_EVENT.RECEIVED_OFFER);
       noteSocket.socket?.off(SOCKET_EVENT.RECEIVED_ANSWER);
       noteSocket.socket?.off(SOCKET_EVENT.RECEIVED_ICE_CANDIDATE);
+
+      if (userStreams) {
+        Object.keys(userStreams).forEach((sid) => {
+          const pc = pcsRef.current?.[sid];
+          if (!pc) return;
+          pc.close();
+          delete pcsRef.current[sid];
+        });
+      }
     };
   }, [userStreams, myMediaStream]);
 };

@@ -8,7 +8,7 @@ type States = {
 };
 
 type Actions = {
-  setMyMediaStream: (myMediaStream: MediaStream) => void;
+  setMyMediaStream: (myMediaStream: MediaStream | null) => void;
   setIsMyVideoOn: (isMyVideoOn: boolean) => void;
   setIsMyAudioOn: (isMyAudioOn: boolean) => void;
 };
