@@ -12,6 +12,7 @@ export const PAGE_LIST = {
 export const SOCKET_URL = {
   LOBBY: `${BASE_URL}/socket/lobby`,
   NOTE: `${BASE_URL}/socket/note`,
+  CRDT: `${BASE_URL}/socket/crdt`,
 } as const;
 
 export const SOCKET_EVENT = {

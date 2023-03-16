@@ -1,7 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { RemoteDeleteDto, RemoteInsertDto, RemoteUpdateDto } from './dto';
-
 @Injectable()
 export class CrdtGatewayService {
   private server: Server;
