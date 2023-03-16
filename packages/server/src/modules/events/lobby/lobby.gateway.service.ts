@@ -22,6 +22,9 @@ export class LobbyGatewayService {
   }
 
   onDisconnect(client: Socket) {
+    client.broadcast.emit(SOCKET_EVENT.LOBBY_CHAT, {
+      message: `Left Lobby: ${client.id}`,
+    });
     this.logger.log(`Client disconnected: ${client.id}`);
   }
 

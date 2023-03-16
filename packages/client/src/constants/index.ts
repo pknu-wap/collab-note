@@ -23,6 +23,7 @@ export const SOCKET_EVENT = {
   // Note Socket Events
   JOIN_NOTE: 'JOIN_NOTE',
   LEAVE_NOTE: 'LEAVE_NOTE',
+  LEFT_NOTE: 'LEFT_NOTE',
   NOTE_CHAT: 'NOTE_CHAT',
 
   // Note Socket Events - WebRTC
