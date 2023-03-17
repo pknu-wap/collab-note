@@ -1,9 +1,11 @@
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
+import CRDT from '~/lib/crdt/crdt';
 import { mediaQuery } from '~/lib/styles';
 
 const CRDTPage = () => {
   const [text, setText] = useState('');
+  const crdt = new CRDT();
 
   useEffect(() => {
     return;
@@ -12,7 +14,8 @@ const CRDTPage = () => {
   return (
     <Container>
       <div>CRDT TEST PAGE</div>
-      <Block>CRDT</Block>
+      {/* contentEditable은 다른 tag를 input, textarea로 만들어 준다. */}
+      <Block contentEditable>CRDT</Block>
     </Container>
   );
 };
@@ -35,6 +38,8 @@ const Container = styled.div`
 const Block = styled.p`
   width: 100%;
   margin-top: 2rem;
+  line-height: 1.5;
+  outline: none;
 `;
 
 export default CRDTPage;
