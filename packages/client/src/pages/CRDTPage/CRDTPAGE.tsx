@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
 import { mediaQuery } from '~/lib/styles';
 
-const CRDTPAGE = () => {
+const CRDTPage = () => {
   const [text, setText] = useState('');
 
   useEffect(() => {
@@ -37,4 +37,4 @@ const Block = styled.p`
   margin-top: 2rem;
 `;
 
-export default CRDTPAGE;
+export default CRDTPage;
