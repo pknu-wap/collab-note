@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: 'server', // pm2 name
+      name: 'collab-note-server', // pm2 name // 여러 개 생성 시 구분하기 위한 이름
       script: './dist/main.js', // // 앱 실행 스크립트
       instances: 3, // 클러스터 모드 사용 시 생성할 인스턴스 수
       exec_mode: 'cluster', // fork, cluster 모드 중 선택
