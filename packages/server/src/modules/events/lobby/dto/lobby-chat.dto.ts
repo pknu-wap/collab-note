@@ -3,5 +3,9 @@ import { IsNotEmpty, IsString } from 'class-validator';
 export class LobbyChatDto {
   @IsNotEmpty()
   @IsString()
-  message: string;
+  sid: string;
+
+  @IsNotEmpty()
+  @IsString()
+  text: string;
 }

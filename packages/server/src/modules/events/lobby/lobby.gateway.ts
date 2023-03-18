@@ -32,17 +32,6 @@ export class LobbyGateway
     this.lobbyGatewayService.onDisconnect(client);
   }
 
-  // Lobby Chat
-  @SubscribeMessage(SOCKET_EVENT.JOIN_LOBBY)
-  handleJoinLobby(client: Socket) {
-    this.lobbyGatewayService.onJoinLobby(client);
-  }
-
-  @SubscribeMessage(SOCKET_EVENT.LEAVE_LOBBY)
-  handleLeaveLobby(client: Socket) {
-    this.lobbyGatewayService.onLeaveLobby(client);
-  }
-
   @SubscribeMessage(SOCKET_EVENT.LOBBY_CHAT)
   handleLobbyChat(client: Socket, dto: LobbyChatDto) {
     this.lobbyGatewayService.onLobbyChat(client, dto);

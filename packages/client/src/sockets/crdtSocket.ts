@@ -1,5 +1,5 @@
 import { Socket, io } from 'socket.io-client';
-import { SOCKET_EVENT, SOCKET_URL } from '~/constants';
+import { SOCKET_URL } from '~/constants';
 
 class CrdtSocket {
   socket: Socket | null;

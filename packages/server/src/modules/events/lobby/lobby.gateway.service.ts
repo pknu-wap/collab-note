@@ -19,38 +19,18 @@ export class LobbyGatewayService {
     } catch (error) {
       this.logger.error(error);
     }
-
-    client.on('disconnecting', () => this.onDisconnecting(client));
-  }
-
-  private onDisconnecting(client: Socket) {
-    client.broadcast.emit(SOCKET_EVENT.LOBBY_CHAT, {
-      message: `Left Lobby: ${client.id}`,
-    });
   }
 
   onDisconnect(client: Socket) {
     this.logger.log(`Client disconnected: ${client.id}`);
   }
 
-  onJoinLobby(client: Socket) {
-    // send to all clients in lobby except sender
-    client.broadcast.emit(SOCKET_EVENT.LOBBY_CHAT, {
-      message: `Joined Lobby: ${client.id}`,
-    });
-  }
-
-  onLeaveLobby(client: Socket) {
-    // send to all clients in lobby except sender
-    client.broadcast.emit(SOCKET_EVENT.LOBBY_CHAT, {
-      message: `Left Lobby: ${client.id}`,
-    });
-  }
-
   onLobbyChat(client: Socket, dto: LobbyChatDto) {
     // send to all clients in lobby
     this.server.emit(SOCKET_EVENT.LOBBY_CHAT, {
-      message: `${client.id}: ${dto.message}`,
+      sid: client.id,
+      text: dto.text,
+      timeStamp: new Date(),
     });
   }
 }

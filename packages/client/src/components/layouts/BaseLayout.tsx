@@ -1,12 +1,15 @@
 import React from 'react';
 import Header from '../base/Header';
-import { Outlet } from 'react-router-dom';
 
-const BaseLayout = () => {
+interface Props {
+  children: React.ReactNode;
+}
+
+const BaseLayout = ({ children }: Props) => {
   return (
     <>
       <Header />
-      <Outlet />
+      {children}
     </>
   );
 };

@@ -21,25 +21,25 @@ class LobbySocket {
     this.socket?.connect();
   }
 
-  joinLobby() {
-    this.socket?.emit(SOCKET_EVENT.JOIN_LOBBY);
+  sendMessage({ text }: { text: string }) {
+    this.socket?.emit(SOCKET_EVENT.LOBBY_CHAT, {
+      sid: this.socket.id,
+      text,
+    });
   }
 
-  sendMessage({ message }: { message: string }) {
-    this.socket?.emit(SOCKET_EVENT.LOBBY_CHAT, { message });
-  }
-
-  receiveMessage({ done }: { done: (message: string) => void }) {
-    this.socket?.on(SOCKET_EVENT.LOBBY_CHAT, ({ message }) => {
-      done(message);
+  receiveMessage({
+    done,
+  }: {
+    done: (text: string, isMyMessage: boolean, timeStamp: string) => void;
+  }) {
+    this.socket?.on(SOCKET_EVENT.LOBBY_CHAT, ({ sid, text, timeStamp }) => {
+      done(text, sid === this.socket?.id, timeStamp);
     });
   }
 
   leaveLobby() {
-    this.socket?.emit(SOCKET_EVENT.LEAVE_LOBBY);
     this.socket?.off(SOCKET_EVENT.LOBBY_CHAT);
-    this.socket?.off(SOCKET_EVENT.JOIN_LOBBY);
-    this.socket?.off(SOCKET_EVENT.LEAVE_LOBBY);
     this.socket?.disconnect();
   }
 }

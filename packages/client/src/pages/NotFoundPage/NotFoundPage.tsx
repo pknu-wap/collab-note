@@ -1,5 +1,7 @@
+import BaseLayout from '~/components/layouts/BaseLayout';
+
 const NotFoundPage = () => {
-  return <div>NotFoundPage</div>;
+  return <BaseLayout>NotFoundPage</BaseLayout>;
 };
 
 export default NotFoundPage;

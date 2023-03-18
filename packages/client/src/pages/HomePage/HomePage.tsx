@@ -1,22 +1,25 @@
 import { useEffect, useRef, useState } from 'react';
 import lobbySocket from '~/sockets/lobbySocket';
 import styled from '@emotion/styled';
-import { SOCKET_EVENT } from '~/constants';
+import { mediaQuery } from '~/lib/styles';
+import ChatInput from '~/components/home/ChatInput';
+import Message from '~/components/home/Message';
 
 const HomePage = () => {
-  const [messages, setMessages] = useState<string[]>([]);
-  const [messageInput, setMessageInput] = useState<string>('');
-  const chatListRef = useRef<HTMLDivElement>(null);
-
-  const handleLoginGithub = () => {
-    window.location.href = 'http://localhost:8080/auth/github';
-  };
+  const [messages, setMessages] = useState<
+    { text: string; isMyMessage: boolean; timeStamp: string }[]
+  >([]);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     lobbySocket.initLobbySocket();
-    lobbySocket.joinLobby();
     lobbySocket.receiveMessage({
-      done: (message) => setMessages((prev) => [...prev, message]),
+      done: (text: string, isMyMessage: boolean, timeStamp: string) => {
+        setMessages((prev) => [...prev, { text, isMyMessage, timeStamp }]);
+        if (isMyMessage) {
+          scrollRef.current?.scrollTo(0, scrollRef.current.scrollHeight);
+        }
+      },
     });
     return () => {
       lobbySocket.leaveLobby();
@@ -24,82 +27,134 @@ const HomePage = () => {
   }, []);
 
   useEffect(() => {
-    if (chatListRef.current) {
-      chatListRef.current.scrollTo(0, chatListRef.current.scrollHeight);
+    if (scrollRef.current) {
+      // scroll이 바닥에 있을 경우에만
+      // 스크롤을 내려준다.
+      if (
+        scrollRef.current.scrollHeight -
+          scrollRef.current.scrollTop -
+          scrollRef.current.clientHeight <
+        200 // 200px 이하로 남았을 때
+      )
+        scrollRef.current.scrollTo(0, scrollRef.current.scrollHeight);
     }
   }, [messages]);
 
-  const handleSubmitMessage = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    lobbySocket.sendMessage({ message: messageInput });
-    setMessageInput('');
-  };
-
   return (
-    <Container>
-      <button onClick={handleLoginGithub}>깃허브 로그인</button>
-      <ContentsWrapper>
-        <ChatContainer ref={chatListRef}>
-          {messages.map((message) => {
-            return <div key={crypto.randomUUID()}>{message}</div>;
-          })}
-        </ChatContainer>
-      </ContentsWrapper>
-      <ChatForm onSubmit={handleSubmitMessage}>
-        <ChatInput
-          placeholder="Write Message..."
-          onChange={(e) => setMessageInput(e.target.value)}
-          value={messageInput}
-        />
-        <button type="submit">Send</button>
-      </ChatForm>
-    </Container>
+    <>
+      <Background>
+        <div className="color" />
+        <div className="color" />
+        <div className="color" />
+      </Background>
+      <Layout>
+        <Container>
+          <ChatContainer ref={scrollRef}>
+            <ChatList>
+              {messages.map(({ isMyMessage, text, timeStamp }, idx) => {
+                return (
+                  <Message
+                    key={idx}
+                    isMyMessage={isMyMessage}
+                    text={text}
+                    timeStamp={timeStamp}
+                  />
+                );
+              })}
+            </ChatList>
+          </ChatContainer>
+          <ChatInput />
+        </Container>
+      </Layout>
+    </>
   );
 };
 
-const ChatForm = styled.form`
-  margin-top: 20px;
-  width: 600px;
-  height: 60px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  padding-right: 1rem;
-`;
-const ChatInput = styled.input`
+const Layout = styled.div`
+  position: fixed;
+  // dvh: mobile vh 대응
+  height: 100dvh;
   width: 100%;
-  height: 40px;
-  margin: 0 1rem;
-  font-size: 1rem;
-  border-bottom: 2px solid rgba(0, 0, 0, 0.8);
+  z-index: 2;
+
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
 `;
 
-const ChatContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  overflow-y: auto;
-  width: 600px;
-  height: 100%;
+const Background = styled.div`
+  position: fixed;
+  // dvh: mobile vh 대응
+  height: 100dvh;
+  width: 100%;
+  z-index: -1;
+
+  background: linear-gradient(to bottom, #ff4f8b, #dff1ff);
+  overflow: hidden;
+
+  .color {
+    position: absolute;
+    filter: blur(150px);
+  }
+  .color:nth-of-type(1) {
+    top: 5%;
+    background: #ff359b;
+    width: 30%;
+    height: 30%;
+    z-index: 1;
+  }
+  .color:nth-of-type(2) {
+    position: fixed;
+
+    bottom: 0;
+    left: 10%;
+    background: #fffd87;
+    width: 50%;
+    height: 40%;
+    z-index: 1;
+  }
+  .color:nth-of-type(3) {
+    position: fixed;
+
+    bottom: 0;
+    right: 0;
+    background: #00d2ff;
+    width: 30%;
+    height: 20%;
+    z-index: 1;
+  }
 `;
 
 const Container = styled.div`
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  margin-top: 2rem;
+  margin: 0 auto;
+  gap: 10px;
+  ${mediaQuery.tablet} {
+    width: 768px;
+  }
+  z-index: 5;
 `;
 
-const ContentsWrapper = styled.div`
-  margin-top: 1rem;
+const ChatContainer = styled.div`
+  flex: 1;
+  overflow-y: auto;
+  width: 100%;
+  padding: 20px;
+  z-index: 5;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+const ChatList = styled.div`
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  width: 600px;
-  height: 400px;
+  flex-direction: column;
+  gap: 1rem;
+  z-index: 5;
 `;
 
 export default HomePage;

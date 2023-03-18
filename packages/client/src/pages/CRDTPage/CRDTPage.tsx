@@ -1,22 +1,51 @@
 import styled from '@emotion/styled';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import BaseLayout from '~/components/layouts/BaseLayout';
+import { SOCKET_EVENT } from '~/constants';
 import CRDT from '~/lib/crdt/crdt';
 import { mediaQuery } from '~/lib/styles';
-
+import crdtSocket from '~/sockets/crdtSocket';
 const CRDTPage = () => {
   const [text, setText] = useState('');
   const crdt = new CRDT();
+  const blockRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
-    return;
+    crdtSocket.socket?.on(SOCKET_EVENT.REMOTE_INSERT, () => {
+      return;
+    });
+
+    crdtSocket.socket?.on(SOCKET_EVENT.REMOTE_DELETE, () => {
+      return;
+    });
+
+    crdtSocket.socket?.on(SOCKET_EVENT.REMOTE_UPDATE, () => {
+      return;
+    });
   }, []);
 
+  const handleInsert = () => {
+    return;
+  };
+
+  const handleDelete = () => {
+    return;
+  };
+
+  const handleUpdate = () => {
+    return;
+  };
+
   return (
-    <Container>
-      <div>CRDT TEST PAGE</div>
-      {/* contentEditable은 다른 tag를 input, textarea로 만들어 준다. */}
-      <Block contentEditable>CRDT</Block>
-    </Container>
+    <BaseLayout>
+      <Container>
+        <div>CRDT TEST PAGE</div>
+        {/* contentEditable은 다른 tag를 input, textarea로 만들어 준다. */}
+        <Block contentEditable ref={blockRef}>
+          CRDT
+        </Block>
+      </Container>
+    </BaseLayout>
   );
 };
 

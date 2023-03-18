@@ -1,7 +1,5 @@
 export const SOCKET_EVENT = {
   // Lobby Socket Events
-  JOIN_LOBBY: 'JOIN_LOBBY',
-  LEAVE_LOBBY: 'LEAVE_LOBBY',
   LOBBY_CHAT: 'LOBBY_CHAT',
 
   // Note Socket Events
