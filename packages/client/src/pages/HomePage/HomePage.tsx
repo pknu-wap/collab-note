@@ -64,12 +64,13 @@ const HomePage = () => {
 const Layout = styled.div`
   position: fixed;
   // dvh: mobile vh 대응
-  height: 100vh;
+  height: 100dvh;
   width: 100%;
   z-index: 2;
 
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 `;
 
 const Background = styled.div`
@@ -77,7 +78,7 @@ const Background = styled.div`
   // dvh: mobile vh 대응
   height: 100dvh;
   width: 100%;
-  z-index: -1;
+  z-index: 1;
 
   background: linear-gradient(to bottom, #ff4f8b, #dff1ff);
   overflow: hidden;
