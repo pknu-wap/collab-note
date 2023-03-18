@@ -27,17 +27,8 @@ const HomePage = () => {
   }, []);
 
   useEffect(() => {
-    if (scrollRef.current) {
-      // scroll이 바닥에 있을 경우에만
-      // 스크롤을 내려준다.
-      if (
-        scrollRef.current.scrollHeight -
-          scrollRef.current.scrollTop -
-          scrollRef.current.clientHeight <
-        200 // 200px 이하로 남았을 때
-      )
-        scrollRef.current.scrollTo(0, scrollRef.current.scrollHeight);
-    }
+    if (!scrollRef.current) return;
+    scrollRef.current.scrollTo(0, scrollRef.current.scrollHeight);
   }, [messages]);
 
   return (
@@ -73,7 +64,7 @@ const HomePage = () => {
 const Layout = styled.div`
   position: fixed;
   // dvh: mobile vh 대응
-  height: 100dvh;
+  height: 100vh;
   width: 100%;
   z-index: 2;
 
