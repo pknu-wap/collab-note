@@ -32,5 +32,5 @@
 ## `Links`
 
 - server-dev: <https://dev.wap-dev.store>
-- client-dev: <https://collab-note.vercel.app>
+- client-dev: <https://seminar.wap-dev.store>
 - storybook: <https://collab-note-storybook.vercel.app>

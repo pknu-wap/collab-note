@@ -5,6 +5,6 @@ export default () => ({
   // 나중에 수정할 것
   ALLOWLIST:
     process.env.NODE_ENV === 'production'
-      ? /collab-note.vercel.app/
+      ? /seminar.wap-dev.store/
       : /localhost/,
 });
