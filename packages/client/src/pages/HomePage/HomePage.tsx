@@ -64,9 +64,8 @@ const HomePage = () => {
 const Layout = styled.div`
   position: fixed;
   // dvh: mobile vh 대응
-  height: 100dvh;
+  height: 100vh;
   width: 100%;
-  z-index: 2;
 
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(4px);
@@ -78,7 +77,6 @@ const Background = styled.div`
   // dvh: mobile vh 대응
   height: 100dvh;
   width: 100%;
-  z-index: 1;
 
   background: linear-gradient(to bottom, #ff4f8b, #dff1ff);
   overflow: hidden;
@@ -92,7 +90,6 @@ const Background = styled.div`
     background: #ff359b;
     width: 30%;
     height: 30%;
-    z-index: 1;
   }
   .color:nth-of-type(2) {
     position: fixed;
@@ -102,7 +99,6 @@ const Background = styled.div`
     background: #fffd87;
     width: 50%;
     height: 40%;
-    z-index: 1;
   }
   .color:nth-of-type(3) {
     position: fixed;
@@ -112,7 +108,6 @@ const Background = styled.div`
     background: #00d2ff;
     width: 30%;
     height: 20%;
-    z-index: 1;
   }
 `;
 
@@ -128,7 +123,6 @@ const Container = styled.div`
   ${mediaQuery.tablet} {
     width: 768px;
   }
-  z-index: 5;
 `;
 
 const ChatContainer = styled.div`
@@ -136,7 +130,7 @@ const ChatContainer = styled.div`
   overflow-y: auto;
   width: 100%;
   padding: 20px;
-  z-index: 5;
+
   &::-webkit-scrollbar {
     display: none;
   }
@@ -146,7 +140,6 @@ const ChatList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  z-index: 5;
 `;
 
 export default HomePage;

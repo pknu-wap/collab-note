@@ -36,7 +36,6 @@ const Form = styled.form`
   justify-content: center;
   width: 100%;
   padding: 0.5rem 1rem 1rem 1rem;
-  z-index: 5;
 `;
 
 const MessageInput = styled.input`
@@ -44,7 +43,6 @@ const MessageInput = styled.input`
   height: 100%;
   padding: 0 1rem;
   height: 50px;
-  z-index: 5;
 
   ${glassmorphism}
 `;
