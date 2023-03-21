@@ -10,15 +10,11 @@ export const PAGE_LIST = {
 } as const;
 
 export const SOCKET_URL = {
-  LOBBY: `${BASE_URL}/socket/lobby`,
   NOTE: `${BASE_URL}/socket/note`,
   CRDT: `${BASE_URL}/socket/crdt`,
 } as const;
 
 export const SOCKET_EVENT = {
-  // Lobby Socket Events
-  LOBBY_CHAT: 'LOBBY_CHAT',
-
   // Note Socket Events
   JOIN_NOTE: 'JOIN_NOTE',
   LEAVE_NOTE: 'LEAVE_NOTE',
