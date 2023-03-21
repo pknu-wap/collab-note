@@ -7,6 +7,7 @@ import usePeerConnection from '~/hooks/usePeerConnection';
 import useConnectedUsersStore from '~/stores/useConnectedUsersStore';
 import useMyMediaStreamStore from '~/stores/useMyMediaStreamStore';
 import useUserStreamsStore from '~/stores/useUserStreamsStore';
+import BaseLayout from '~/components/layouts/BaseLayout';
 
 const NotePage = () => {
   const { noteId } = useParams() as { noteId: string };
@@ -76,26 +77,28 @@ const NotePage = () => {
   }, [messages]);
 
   return (
-    <Container>
-      <ChatWrapper>
-        <ContentsWrapper>
-          <ChatContainer ref={chatListRef}>
-            {messages.map((message) => {
-              return <div key={crypto.randomUUID()}>{message}</div>;
-            })}
-          </ChatContainer>
-        </ContentsWrapper>
-        <ChatForm onSubmit={handleSubmitMessage}>
-          <ChatInput
-            placeholder="Write Message..."
-            onChange={(e) => setMessageInput(e.target.value)}
-            value={messageInput}
-          />
-          <button type="submit">Send</button>
-        </ChatForm>
-      </ChatWrapper>
-      <NoteVideoContents noteId={noteId} />
-    </Container>
+    <BaseLayout>
+      <Container>
+        <ChatWrapper>
+          <ContentsWrapper>
+            <ChatContainer ref={chatListRef}>
+              {messages.map((message) => {
+                return <div key={crypto.randomUUID()}>{message}</div>;
+              })}
+            </ChatContainer>
+          </ContentsWrapper>
+          <ChatForm onSubmit={handleSubmitMessage}>
+            <ChatInput
+              placeholder="Write Message..."
+              onChange={(e) => setMessageInput(e.target.value)}
+              value={messageInput}
+            />
+            <button type="submit">Send</button>
+          </ChatForm>
+        </ChatWrapper>
+        <NoteVideoContents noteId={noteId} />
+      </Container>
+    </BaseLayout>
   );
 };
 
