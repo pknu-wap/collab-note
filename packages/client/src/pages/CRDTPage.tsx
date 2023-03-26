@@ -3,12 +3,15 @@ import { useEffect, useRef, useState } from 'react';
 import BaseLayout from '~/components/layouts/BaseLayout';
 import { SOCKET_EVENT } from '~/constants';
 import CRDT from '~/lib/crdt/crdt';
+import LinkedList from '~/lib/crdt/linkedList';
 import { mediaQuery } from '~/lib/styles';
 import crdtSocket from '~/sockets/crdtSocket';
 const CRDTPage = () => {
   const [text, setText] = useState('');
-  const crdt = new CRDT();
+  const crdt = new CRDT(-1, new LinkedList());
   const blockRef = useRef<HTMLParagraphElement>(null);
+
+  // local insert
 
   const handleLocalInsert = () => {
     return;
@@ -21,6 +24,8 @@ const CRDTPage = () => {
   const handleLocalUpdate = () => {
     return;
   };
+
+  // remote insert
 
   useEffect(() => {
     crdtSocket.socket?.on(SOCKET_EVENT.REMOTE_INSERT, () => {
@@ -36,9 +41,13 @@ const CRDTPage = () => {
     });
 
     return () => {
-      crdtSocket.socket?.off(SOCKET_EVENT.REMOTE_INSERT);
-      crdtSocket.socket?.off(SOCKET_EVENT.REMOTE_DELETE);
-      crdtSocket.socket?.off(SOCKET_EVENT.REMOTE_UPDATE);
+      [
+        SOCKET_EVENT.REMOTE_INSERT,
+        SOCKET_EVENT.REMOTE_DELETE,
+        SOCKET_EVENT.REMOTE_UPDATE,
+      ].forEach((event) => {
+        crdtSocket.socket?.off(event);
+      });
     };
   }, []);
 
@@ -47,9 +56,7 @@ const CRDTPage = () => {
       <Container>
         <div>CRDT TEST PAGE</div>
         {/* contentEditable은 다른 tag를 input, textarea로 만들어 준다. */}
-        <Block contentEditable ref={blockRef}>
-          CRDT
-        </Block>
+        <Block contentEditable ref={blockRef} />
       </Container>
     </BaseLayout>
   );
@@ -75,6 +82,9 @@ const Block = styled.p`
   margin-top: 2rem;
   line-height: 1.5;
   outline: none;
+  border: solid 1px gray;
+  padding: 1rem;
+  border-radius: 0.5rem;
 `;
 
 export default CRDTPage;
