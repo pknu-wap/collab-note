@@ -1,7 +1,7 @@
 class Identifier {
   clock: number;
-  client: string;
-  constructor(clock: number, client: string) {
+  client: number;
+  constructor(clock: number, client: number) {
     this.clock = clock;
     this.client = client;
   }

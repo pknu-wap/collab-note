@@ -13,10 +13,15 @@ class Node {
     this.next = null;
   }
 
-  precedes(id: Identifier) {
-    if (this.id.clock < id.clock) return true;
-
-    if (this.id.clock === id.clock && this.id.client < id.client) return true;
+  // this가 node보다 앞에 있으면 true, 아니면 false
+  precedes(node: Node) {
+    // this.prev가 node.prev와 다르면, this가 node보다 앞에 있음.
+    if (JSON.stringify(this.prev) !== JSON.stringify(node.prev)) return false;
+    // this.prev가 node.prev와 같으면, this.id와 node.id를 비교.
+    // this.id가 node.id보다 작으면, this가 node보다 앞에 있음.
+    if (node.id.clock < this.id.clock) return true;
+    if (this.id.clock === node.id.clock && this.id.client < node.id.client)
+      return true;
 
     return false;
   }

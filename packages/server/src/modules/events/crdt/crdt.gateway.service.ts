@@ -1,10 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
+import { SOCKET_EVENT } from '~/common/constants';
 import { RemoteDeleteDto, RemoteInsertDto, RemoteUpdateDto } from './dto';
+import CRDT from '~/lib/crdt/crdt';
+import LinkedList from '~/lib/crdt/linkedList';
 @Injectable()
 export class CrdtGatewayService {
   private server: Server;
   private logger = new Logger('CrdtGatewayService');
+  private crdt = new CRDT(-1, new LinkedList());
 
   onAterInit(server: Server) {
     this.server = server;
@@ -23,15 +27,25 @@ export class CrdtGatewayService {
     this.logger.log(`Client disconnected: ${client.id}`);
   }
 
-  onRemoteInsert(client: Socket, dto: RemoteInsertDto) {
-    return;
+  async onRemoteInsert(client: Socket, { id, operation }: RemoteInsertDto) {
+    try {
+      this.crdt.remoteInsert(operation);
+      //TODO: save to db
+      this.server.emit(SOCKET_EVENT.LOCAL_INSERT, { id, operation });
+    } catch (error) {
+      // 이전 상태로 돌리기
+      // initBlock(id);
+      this.logger.error(error);
+    }
   }
 
-  onRemoteDelete(client: Socket, dto: RemoteDeleteDto) {
-    return;
+  onRemoteDelete(client: Socket, { id, operation }: RemoteDeleteDto) {
+    const data = {};
+    this.server.emit(SOCKET_EVENT.LOCAL_DELETE, data);
   }
 
-  onRemoteUpdate(client: Socket, dto: RemoteUpdateDto) {
-    return;
+  onRemoteUpdate(client: Socket, { id, operations }: RemoteUpdateDto) {
+    const data = {};
+    this.server.emit(SOCKET_EVENT.LOCAL_UPDATE, data);
   }
 }

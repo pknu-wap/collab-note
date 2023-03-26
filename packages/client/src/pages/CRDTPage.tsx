@@ -10,6 +10,18 @@ const CRDTPage = () => {
   const crdt = new CRDT();
   const blockRef = useRef<HTMLParagraphElement>(null);
 
+  const handleLocalInsert = () => {
+    return;
+  };
+
+  const handleLocalDelete = () => {
+    return;
+  };
+
+  const handleLocalUpdate = () => {
+    return;
+  };
+
   useEffect(() => {
     crdtSocket.socket?.on(SOCKET_EVENT.REMOTE_INSERT, () => {
       return;
@@ -22,19 +34,13 @@ const CRDTPage = () => {
     crdtSocket.socket?.on(SOCKET_EVENT.REMOTE_UPDATE, () => {
       return;
     });
+
+    return () => {
+      crdtSocket.socket?.off(SOCKET_EVENT.REMOTE_INSERT);
+      crdtSocket.socket?.off(SOCKET_EVENT.REMOTE_DELETE);
+      crdtSocket.socket?.off(SOCKET_EVENT.REMOTE_UPDATE);
+    };
   }, []);
-
-  const handleInsert = () => {
-    return;
-  };
-
-  const handleDelete = () => {
-    return;
-  };
-
-  const handleUpdate = () => {
-    return;
-  };
 
   return (
     <BaseLayout>
