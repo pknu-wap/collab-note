@@ -34,8 +34,7 @@ export class CrdtGatewayService {
 
     try {
       this.crdt.remoteInsert(operation);
-      //TODO: save to db
-      this.server.emit(SOCKET_EVENT.LOCAL_INSERT, { id, operation });
+      client.broadcast.emit(SOCKET_EVENT.LOCAL_INSERT, { id, operation });
     } catch (error) {
       // 이전 상태로 돌리기
       // initBlock(id);

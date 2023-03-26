@@ -19,10 +19,10 @@ class LinkedList {
 
     const { head, nodeMap } = initialStructure;
 
-    this.head = head;
+    this.head = head ?? null;
 
-    if (!nodeMap) {
-      this.nodeMap = {};
+    if (!nodeMap && !Object.keys(nodeMap).length) {
+      this.nodeMap = nodeMap ?? {};
       return this;
     }
 
@@ -56,7 +56,14 @@ class LinkedList {
         node.prev = null;
         this.head = id;
 
-        console.log('head_id', node.id, 'head_value', node.value);
+        console.log(
+          '[id]',
+          node.id.clock,
+          '[value]',
+          node.value,
+          '[index]',
+          index,
+        );
         return { node };
       }
 
@@ -67,19 +74,25 @@ class LinkedList {
 
       node.prev = prevNode.id;
 
-      console.log('id', node.id, 'value', node.value);
+      console.log(
+        '[id]',
+        node.id.clock,
+        '[value]',
+        node.value,
+        '[index]',
+        index,
+        '[nodemap]',
+        this.nodeMap,
+      );
+
       return { node };
     } catch (e) {
       console.error('insertByIndex error\n', e);
     }
   }
 
-  // 이것은 server에서 client가 준 것을 받았을 때 작동하는 함수
   insertById(node: Node) {
     // remote operation
-
-    //TODO: 현재 2번째 입력에서 실패함. 이유를 찾아야 함.
-    console.log(JSON.stringify(node));
 
     try {
       Object.setPrototypeOf(node, Node.prototype);
@@ -128,7 +141,7 @@ class LinkedList {
 
       return prevIndex + 1;
     } catch (e) {
-      console.log('여기서 실패', e);
+      console.log(e);
     }
   }
 
@@ -184,9 +197,16 @@ class LinkedList {
     let node: Node | null = this.getHeadNode();
     let result = '';
 
-    while (node) {
+    // 임시로 5번만 반복
+    let i = 5;
+    while (node?.next && i > 0) {
       result += node.value;
+      console.log('next', node.next.client);
+
       node = this.getNode(node.next);
+      console.log(node?.next?.client);
+
+      i--;
     }
 
     return result;

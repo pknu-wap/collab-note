@@ -19,10 +19,10 @@ class LinkedList {
 
     const { head, nodeMap } = initialStructure;
 
-    this.head = head;
+    this.head = head ?? null;
 
-    if (!nodeMap) {
-      this.nodeMap = {};
+    if (!nodeMap && !Object.keys(nodeMap).length) {
+      this.nodeMap = nodeMap ?? {};
       return this;
     }
 
@@ -201,6 +201,8 @@ class LinkedList {
       result += node.value;
       node = this.getNode(node.next);
     }
+
+    console.log('stringify', result);
 
     return result;
   }

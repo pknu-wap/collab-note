@@ -8,7 +8,9 @@ import Node from '~/lib/crdt/node';
 import { mediaQuery } from '~/lib/styles';
 import crdtSocket from '~/sockets/crdtSocket';
 const CRDTPage = () => {
-  const crdtRef = useRef<CRDT>(new CRDT(-1, new LinkedList()));
+  const crdtRef = useRef<CRDT>(
+    new CRDT(Math.floor(Math.random() * 100) + 1, new LinkedList()),
+  );
   const blockRef = useRef<HTMLParagraphElement>(null);
   const offsetRef = useRef<number>(-1); // index -1부터 해야하는 듯???
 
@@ -30,6 +32,8 @@ const CRDTPage = () => {
   // local insert
 
   const handleLocalInsert = (e: React.FormEvent<HTMLParagraphElement>) => {
+    console.log('local insert');
+
     const event = e.nativeEvent as InputEvent;
     const index = offsetRef.current++;
     const value = event.data;
@@ -37,8 +41,9 @@ const CRDTPage = () => {
     if (!value) return;
 
     const remoteInsertion = crdtRef.current.localInsert(index, value);
-
+    console.log('여기여기', remoteInsertion);
     crdtSocket.socket?.emit(SOCKET_EVENT.REMOTE_INSERT, {
+      // id는 block id
       id: -1,
       operation: remoteInsertion,
     });
@@ -61,7 +66,13 @@ const CRDTPage = () => {
       SOCKET_EVENT.LOCAL_INSERT,
       ({ id, operation }: { id: number; operation: { node: Node } }) => {
         crdtRef.current.remoteInsert(operation);
-        console.log('remote insert', id, operation);
+
+        if (!blockRef.current) {
+          console.log('blockRef.current가 없습니다.');
+          return;
+        }
+
+        blockRef.current.innerText = crdtRef.current.read();
       },
     );
 
