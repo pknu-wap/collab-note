@@ -34,6 +34,7 @@ class CRDT {
     // 3. socket.emit('insert', operation)
 
     const id = new Identifier(this.clock++, this.client);
+
     const remoteInsertion = this.structure.insertByIndex(id, index, value);
 
     return remoteInsertion;

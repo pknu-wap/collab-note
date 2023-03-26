@@ -47,23 +47,45 @@ class LinkedList {
   }
 
   insertByIndex(id: Identifier, index: number, value: string) {
-    const node = new Node(id, value);
+    try {
+      const node = new Node(id, value);
+      this.setNode(id, node);
 
-    if (!this.head || index === -1) {
-      node.next = this.head;
-      node.prev = null;
-      this.head = id;
+      if (!this.head || index === -1) {
+        node.next = this.head;
+        node.prev = null;
+        this.head = id;
 
+        console.log(
+          '[id]',
+          node.id.clock,
+          '[value]',
+          node.value,
+          '[index]',
+          index,
+        );
+        return { node };
+      }
+
+      const prevNode = this.findByIndex(index);
+
+      node.next = prevNode.next;
+      prevNode.next = node.id;
+
+      node.prev = prevNode.id;
+
+      console.log(
+        '[id]',
+        node.id.clock,
+        '[value]',
+        node.value,
+        '[index]',
+        index,
+      );
       return { node };
+    } catch (e) {
+      console.error('insertByIndex error\n', e);
     }
-
-    const prevNode = this.findNodeByIndex(index);
-
-    node.next = prevNode.next;
-    prevNode.next = node.id;
-
-    node.prev = prevNode.id;
-    return { node };
   }
 
   insertById(node: Node) {
@@ -147,7 +169,7 @@ class LinkedList {
       }
 
       // head를 제외한 node를 삭제하는 경우
-      const prevNode = this.findNodeByIndex(index - 1);
+      const prevNode = this.findByIndex(index - 1);
       if (!prevNode.next) throw new Error('node not found');
 
       // 삭제할 node를 찾아서 targetNode에 할당
@@ -174,7 +196,7 @@ class LinkedList {
     return;
   }
 
-  private findNodeByIndex(index: number) {
+  private findByIndex(index: number): Node {
     let count = 0;
     let currentNode: Node | null = this.getHeadNode();
 
@@ -183,7 +205,7 @@ class LinkedList {
       count++;
     }
 
-    if (!currentNode) throw new Error('index out of range');
+    if (!currentNode) throw new Error('node not found');
 
     return currentNode;
   }
@@ -210,7 +232,7 @@ class LinkedList {
     return this.getNode(this.head);
   }
 
-  private getNode(id: Identifier | null) {
+  private getNode(id: Identifier | null): Node | null {
     if (!id) return null;
 
     return this.nodeMap[JSON.stringify(id)];
