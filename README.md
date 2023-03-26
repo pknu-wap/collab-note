@@ -11,9 +11,9 @@
 ## `프로젝트 기술`
 
 - WebRTC: 화상공유
-  - WebRTC(Web Real-Time Communication)란 웹 애플리케이션과 사이트가 중간자 없이 브라우저 간에 오디오나 영상 미디어를 포착하고 마음대로 스트림할 뿐 아니라, 임의의 데이터도 교환할 수 있도록 하는 기술. ex) Zoom, Goolge Meet, Facebook
+  - WebRTC(Web Real-Time Communication)란 웹 애플리케이션과 사이트가 중간자 없이 브라우저 간에 오디오나 영상 미디어를 포착하고 마음대로 스트림할 뿐 아니라, 임의의 데이터도 교환할 수 있도록 하는 기술. ex) Zoom, Google Meet, Facebook
 - CRDT: 동시 편집 알고리즘 구현
-  - CRDT(Conflict-Free-Replicated Data Types)란 동시 수정 작업이 발생하는 분산 시스템에서 데이터 일관성을 보장하는 알고리즘. ex) Figma, Goolge Docs
+  - CRDT(Conflict-Free-Replicated Data Types)란 동시 수정 작업이 발생하는 분산 시스템에서 데이터 일관성을 보장하는 알고리즘. ex) Figma, Google Docs
 - ETC:
 
   - Cypress를 통한 E2E(End To End) Testing

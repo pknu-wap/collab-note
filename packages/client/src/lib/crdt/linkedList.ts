@@ -19,10 +19,10 @@ class LinkedList {
 
     const { head, nodeMap } = initialStructure;
 
-    this.head = head;
+    this.head = head ?? null;
 
-    if (!nodeMap) {
-      this.nodeMap = {};
+    if (!nodeMap && !Object.keys(nodeMap).length) {
+      this.nodeMap = nodeMap ?? {};
       return this;
     }
 
@@ -47,33 +47,145 @@ class LinkedList {
   }
 
   insertByIndex(id: Identifier, index: number, value: string) {
-    const node = new Node(id, value);
+    try {
+      const node = new Node(id, value);
+      this.setNode(id, node);
 
-    if (!this.head || index === -1) {
-      node.next = this.head;
-      node.prev = null;
-      this.head = id;
+      if (!this.head || index === -1) {
+        node.next = this.head;
+        node.prev = null;
+        this.head = id;
+
+        console.log(
+          '[id]',
+          node.id.clock,
+          '[value]',
+          node.value,
+          '[index]',
+          index,
+        );
+        return { node };
+      }
+
+      const prevNode = this.findByIndex(index);
+
+      node.next = prevNode.next;
+      prevNode.next = node.id;
+
+      node.prev = prevNode.id;
+
+      console.log(
+        '[id]',
+        node.id.clock,
+        '[value]',
+        node.value,
+        '[index]',
+        index,
+        '[nodemap]',
+        this.nodeMap,
+      );
 
       return { node };
+    } catch (e) {
+      console.error('insertByIndex error\n', e);
     }
-
-    const prevNode = this.findNodeByIndex(index);
-
-    node.next = prevNode.next;
-    prevNode.next = node.id;
-
-    node.prev = prevNode.id;
-    return { node };
   }
 
-  deleteByIndex() {
-    // local operation
-    return '삭제할 node의 id';
-  }
-
-  insertById() {
+  insertById(node: Node) {
     // remote operation
-    return '변경이 일어난 인덱스';
+
+    try {
+      Object.setPrototypeOf(node, Node.prototype);
+      this.setNode(node.id, node);
+
+      let prevNode: Node | null, prevIndex: number;
+
+      // node.prev가 존재하지 않으면, head를 찾아서 prevNode에 할당
+      if (!node.prev) {
+        const head = this.getHeadNode();
+
+        if (!head || node.precedes(head)) {
+          node.next = this.head;
+          this.head = node.id;
+
+          return null;
+        }
+
+        prevNode = head;
+        prevIndex = 0;
+      } else {
+        // node.prev가 존재하면, node.prev를 찾아서 prevNode에 할당
+        const { node: targetNode, index: targetIndex } = this.findById(
+          node.prev,
+        );
+
+        prevNode = targetNode;
+        prevIndex = targetIndex;
+      }
+
+      if (!prevNode) return null;
+
+      // prevNode.next가 존재하면, prevNode.next를 찾아서 nextNode에 할당
+      while (prevNode.next && this.getNode(prevNode.next)?.precedes(node)) {
+        prevNode = this.getNode(prevNode.next);
+        prevIndex++;
+
+        if (!prevNode) return null;
+      }
+
+      // prevNode.next가 존재하면, prevNode.next를 찾아서 nextNode에 할당
+      node.next = prevNode.next;
+      prevNode.next = node.id;
+
+      node.prev = prevNode.id;
+
+      return prevIndex + 1;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  deleteByIndex(index: number) {
+    try {
+      // head를 삭제하는 경우
+      if (index === 0) {
+        const head = this.getHeadNode();
+
+        // head가 존재하지 않으면, 에러 발생
+        if (!head) throw new Error('head not found');
+
+        const nextNode = this.getNode(head.next);
+
+        // head의 next가 존재하지 않으면, head를 삭제하고, head를 null로 설정
+        if (!nextNode) {
+          this.head = null;
+          return null;
+        }
+
+        nextNode.prev = null;
+
+        this.deleteNode(head.id);
+        this.head = head.next;
+
+        return null;
+      }
+
+      // head를 제외한 node를 삭제하는 경우
+      const prevNode = this.findByIndex(index - 1);
+      if (!prevNode.next) throw new Error('node not found');
+
+      // 삭제할 node를 찾아서 targetNode에 할당
+      const targetNode = this.getNode(prevNode.next);
+
+      if (!targetNode) throw new Error('node not found');
+
+      this.deleteNode(targetNode.id);
+      prevNode.next = targetNode.next;
+
+      return targetNode.id;
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   deleteById() {
@@ -81,12 +193,21 @@ class LinkedList {
     return '변경이 일어난 인덱스';
   }
 
-  stringify() {
-    // 문자열을 합쳐주는 메서드
-    return;
+  stringify(): string {
+    let node: Node | null = this.getHeadNode();
+    let result = '';
+
+    while (node) {
+      result += node.value;
+      node = this.getNode(node.next);
+    }
+
+    console.log('stringify', result);
+
+    return result;
   }
 
-  private findNodeByIndex(index: number) {
+  private findByIndex(index: number): Node {
     let count = 0;
     let currentNode: Node | null = this.getHeadNode();
 
@@ -95,9 +216,25 @@ class LinkedList {
       count++;
     }
 
-    if (!currentNode) throw new Error('index out of range');
+    if (!currentNode) throw new Error('node not found');
 
     return currentNode;
+  }
+
+  private findById(id: Identifier) {
+    let count = 0;
+    let currentNode: Node | null = this.getHeadNode();
+
+    while (currentNode) {
+      if (JSON.stringify(currentNode.id) === JSON.stringify(id)) {
+        return { node: currentNode, index: count };
+      }
+
+      currentNode = this.getNode(currentNode.next);
+      count++;
+    }
+
+    throw new Error('node not found');
   }
 
   private getHeadNode() {
@@ -106,10 +243,18 @@ class LinkedList {
     return this.getNode(this.head);
   }
 
-  private getNode(id: Identifier | null) {
+  private getNode(id: Identifier | null): Node | null {
     if (!id) return null;
 
     return this.nodeMap[JSON.stringify(id)];
+  }
+
+  private setNode(id: Identifier, node: Node) {
+    this.nodeMap[JSON.stringify(id)] = node;
+  }
+
+  private deleteNode(id: Identifier) {
+    delete this.nodeMap[JSON.stringify(id)];
   }
 }
 

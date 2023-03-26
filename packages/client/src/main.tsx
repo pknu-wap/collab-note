@@ -23,7 +23,7 @@ const queryClient = new QueryClient({
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <BrowserRouter>
     <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       <ThemeProvider theme={lightTheme}>
         <GlobalStyle />
         <App />

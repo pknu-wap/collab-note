@@ -1,8 +1,8 @@
 import { Route, Routes } from 'react-router-dom';
-import CRDTPage from '~/pages/CRDTPage/CRDTPage';
-import HomePage from '~/pages/HomePage/HomePage';
-import NotePage from '~/pages/NotePage/NotePage';
-import NotFoundPage from '~/pages/NotFoundPage/NotFoundPage';
+import CRDTPage from '~/pages/CRDTPage';
+import HomePage from '~/pages/HomePage';
+import NotePage from '~/pages/NotePage';
+import NotFoundPage from '~/pages/NotFoundPage';
 
 const PageRoutes = () => {
   return (

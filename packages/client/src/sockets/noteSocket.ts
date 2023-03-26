@@ -50,11 +50,15 @@ class NoteSocket {
   leaveNote(noteId: string) {
     console.log('leaveNote');
     this.socket?.emit(SOCKET_EVENT.LEAVE_NOTE, { noteId });
-    this.socket?.off(SOCKET_EVENT.NOTE_CHAT);
-    this.socket?.off(SOCKET_EVENT.JOIN_NOTE);
-    this.socket?.off(SOCKET_EVENT.LEAVE_NOTE);
-    this.socket?.off(SOCKET_EVENT.EXISTING_NOTE_USERS);
-    this.socket?.off(SOCKET_EVENT.LEFT_NOTE);
+    [
+      SOCKET_EVENT.NOTE_CHAT,
+      SOCKET_EVENT.JOIN_NOTE,
+      SOCKET_EVENT.LEAVE_NOTE,
+      SOCKET_EVENT.EXISTING_NOTE_USERS,
+      SOCKET_EVENT.LEFT_NOTE,
+    ].forEach((event) => {
+      this.socket?.off(event);
+    });
     this.socket?.disconnect();
   }
 }
