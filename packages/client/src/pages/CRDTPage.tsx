@@ -4,6 +4,7 @@ import BaseLayout from '~/components/layouts/BaseLayout';
 import { SOCKET_EVENT } from '~/constants';
 import CRDT from '~/lib/crdt/crdt';
 import LinkedList from '~/lib/crdt/linkedList';
+import Node from '~/lib/crdt/node';
 import { mediaQuery } from '~/lib/styles';
 import crdtSocket from '~/sockets/crdtSocket';
 const CRDTPage = () => {
@@ -56,23 +57,27 @@ const CRDTPage = () => {
   useEffect(() => {
     crdtSocket.initCrdtSocket();
 
-    crdtSocket.socket?.on(SOCKET_EVENT.REMOTE_INSERT, () => {
+    crdtSocket.socket?.on(
+      SOCKET_EVENT.LOCAL_INSERT,
+      ({ id, operation }: { id: number; operation: { node: Node } }) => {
+        crdtRef.current.remoteInsert(operation);
+        console.log('remote insert', id, operation);
+      },
+    );
+
+    crdtSocket.socket?.on(SOCKET_EVENT.LOCAL_DELETE, () => {
       return;
     });
 
-    crdtSocket.socket?.on(SOCKET_EVENT.REMOTE_DELETE, () => {
-      return;
-    });
-
-    crdtSocket.socket?.on(SOCKET_EVENT.REMOTE_UPDATE, () => {
+    crdtSocket.socket?.on(SOCKET_EVENT.LOCAL_UPDATE, () => {
       return;
     });
 
     return () => {
       [
-        SOCKET_EVENT.REMOTE_INSERT,
-        SOCKET_EVENT.REMOTE_DELETE,
-        SOCKET_EVENT.REMOTE_UPDATE,
+        SOCKET_EVENT.LOCAL_INSERT,
+        SOCKET_EVENT.LOCAL_DELETE,
+        SOCKET_EVENT.LOCAL_UPDATE,
       ].forEach((event) => {
         crdtSocket.socket?.off(event);
       });

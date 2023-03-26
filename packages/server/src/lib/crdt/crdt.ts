@@ -67,6 +67,10 @@ class CRDT {
     // 2. CRDT에서 지우기: merge()
     return;
   }
+
+  read() {
+    return this.structure.stringify();
+  }
 }
 
 export default CRDT;

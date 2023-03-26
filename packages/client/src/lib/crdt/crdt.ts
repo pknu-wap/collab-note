@@ -48,6 +48,7 @@ class CRDT {
     return;
   }
 
+  // 이것은 서버가 클라이언트에게 준 문자를 받아서 CRDT에 넣는 함수입니다.
   remoteInsert({ node }: { node: Node }) {
     // 1. CRDT에서 받은 문자가 들어가야 할 index를 찾음: findIndex()
     // 2. CRDT에 넣기: merge()
@@ -66,6 +67,10 @@ class CRDT {
     // 1. CRDT에서 삭제된 문자의 index를 찾음: findIndex()
     // 2. CRDT에서 지우기: merge()
     return;
+  }
+
+  read() {
+    return this.structure.stringify();
   }
 }
 

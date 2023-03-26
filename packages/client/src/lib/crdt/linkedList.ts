@@ -95,6 +95,7 @@ class LinkedList {
     // remote operation
 
     try {
+      Object.setPrototypeOf(node, Node.prototype);
       this.setNode(node.id, node);
 
       let prevNode: Node | null, prevIndex: number;
@@ -142,8 +143,6 @@ class LinkedList {
     } catch (e) {
       console.log(e);
     }
-
-    return '변경이 일어난 인덱스';
   }
 
   deleteByIndex(index: number) {
@@ -194,9 +193,16 @@ class LinkedList {
     return '변경이 일어난 인덱스';
   }
 
-  stringify() {
-    // 문자열을 합쳐주는 메서드
-    return;
+  stringify(): string {
+    let node: Node | null = this.getHeadNode();
+    let result = '';
+
+    while (node) {
+      result += node.value;
+      node = this.getNode(node.next);
+    }
+
+    return result;
   }
 
   private findByIndex(index: number): Node {
@@ -218,7 +224,7 @@ class LinkedList {
     let currentNode: Node | null = this.getHeadNode();
 
     while (currentNode) {
-      if (JSON.stringify(currentNode.id) !== JSON.stringify(id)) {
+      if (JSON.stringify(currentNode.id) === JSON.stringify(id)) {
         return { node: currentNode, index: count };
       }
 

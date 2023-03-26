@@ -79,9 +79,10 @@ class LinkedList {
     // remote operation
 
     //TODO: 현재 2번째 입력에서 실패함. 이유를 찾아야 함.
-    console.log(JSON.stringify(node, null, 2));
+    console.log(JSON.stringify(node));
 
     try {
+      Object.setPrototypeOf(node, Node.prototype);
       this.setNode(node.id, node);
 
       let prevNode: Node | null, prevIndex: number;
@@ -179,9 +180,16 @@ class LinkedList {
     return '변경이 일어난 인덱스';
   }
 
-  stringify() {
-    // 문자열을 합쳐주는 메서드
-    return;
+  stringify(): string {
+    let node: Node | null = this.getHeadNode();
+    let result = '';
+
+    while (node) {
+      result += node.value;
+      node = this.getNode(node.next);
+    }
+
+    return result;
   }
 
   private findByIndex(index: number): Node {
