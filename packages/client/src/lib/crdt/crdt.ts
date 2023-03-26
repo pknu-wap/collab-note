@@ -28,6 +28,10 @@ class CRDT {
     this.clock = maxClock + 1;
   }
 
+  get data() {
+    return this.structure;
+  }
+
   localInsert(index: number, value: string) {
     // 1. 입력된 문자의 left, right를 찾음.
     // 2. left.id, right.id 사이의 id를 만듦 -> { id, content }, CRDT에 넣기: merge()

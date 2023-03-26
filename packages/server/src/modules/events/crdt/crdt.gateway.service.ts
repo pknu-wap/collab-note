@@ -18,6 +18,7 @@ export class CrdtGatewayService {
   onConnection(client: Socket) {
     try {
       this.logger.log(`Client connected: ${client.id}`);
+      client.emit(SOCKET_EVENT.CRDT_INIT, { data: this.crdt.data });
     } catch (error) {
       this.logger.error(error);
     }

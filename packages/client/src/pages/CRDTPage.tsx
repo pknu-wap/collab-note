@@ -63,6 +63,20 @@ const CRDTPage = () => {
     crdtSocket.initCrdtSocket();
 
     crdtSocket.socket?.on(
+      SOCKET_EVENT.CRDT_INIT,
+      ({ data }: { data: LinkedList }) => {
+        crdtRef.current = new CRDT(
+          Math.floor(Math.random() * 100) + 1,
+          new LinkedList(data),
+        );
+
+        if (!blockRef.current) return;
+
+        blockRef.current.innerText = crdtRef.current.read();
+      },
+    );
+
+    crdtSocket.socket?.on(
       SOCKET_EVENT.LOCAL_INSERT,
       ({ id, operation }: { id: number; operation: { node: Node } }) => {
         crdtRef.current.remoteInsert(operation);
