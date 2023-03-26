@@ -28,6 +28,10 @@ export class CrdtGatewayService {
   }
 
   async onRemoteInsert(client: Socket, { id, operation }: RemoteInsertDto) {
+    this.logger.verbose(
+      `RemoteInsert: id:${id}, clock:${operation.node.id.clock} value:${operation.node.value}`,
+    );
+
     try {
       this.crdt.remoteInsert(operation);
       //TODO: save to db

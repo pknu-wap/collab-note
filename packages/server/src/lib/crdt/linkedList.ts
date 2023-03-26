@@ -74,8 +74,12 @@ class LinkedList {
     }
   }
 
+  // 이것은 server에서 client가 준 것을 받았을 때 작동하는 함수
   insertById(node: Node) {
     // remote operation
+
+    //TODO: 현재 2번째 입력에서 실패함. 이유를 찾아야 함.
+    console.log(JSON.stringify(node, null, 2));
 
     try {
       this.setNode(node.id, node);
@@ -123,10 +127,8 @@ class LinkedList {
 
       return prevIndex + 1;
     } catch (e) {
-      console.log(e);
+      console.log('여기서 실패', e);
     }
-
-    return '변경이 일어난 인덱스';
   }
 
   deleteByIndex(index: number) {
@@ -201,7 +203,7 @@ class LinkedList {
     let currentNode: Node | null = this.getHeadNode();
 
     while (currentNode) {
-      if (JSON.stringify(currentNode.id) !== JSON.stringify(id)) {
+      if (JSON.stringify(currentNode.id) === JSON.stringify(id)) {
         return { node: currentNode, index: count };
       }
 

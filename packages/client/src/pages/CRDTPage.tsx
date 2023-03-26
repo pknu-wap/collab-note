@@ -37,7 +37,7 @@ const CRDTPage = () => {
 
     const remoteInsertion = crdtRef.current.localInsert(index, value);
 
-    crdtSocket.socket?.emit(SOCKET_EVENT.LOCAL_INSERT, {
+    crdtSocket.socket?.emit(SOCKET_EVENT.REMOTE_INSERT, {
       id: -1,
       operation: remoteInsertion,
     });
@@ -54,6 +54,8 @@ const CRDTPage = () => {
   // remote insert
 
   useEffect(() => {
+    crdtSocket.initCrdtSocket();
+
     crdtSocket.socket?.on(SOCKET_EVENT.REMOTE_INSERT, () => {
       return;
     });

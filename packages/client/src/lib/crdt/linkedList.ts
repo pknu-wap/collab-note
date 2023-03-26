@@ -81,7 +81,10 @@ class LinkedList {
         node.value,
         '[index]',
         index,
+        '[nodemap]',
+        this.nodeMap,
       );
+
       return { node };
     } catch (e) {
       console.error('insertByIndex error\n', e);
