@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import BaseLayout from '~/components/layouts/BaseLayout';
 import { SOCKET_EVENT } from '~/constants';
 import CRDT from '~/lib/crdt/crdt';
@@ -10,10 +10,33 @@ import { mediaQuery } from '~/lib/styles';
 import crdtSocket from '~/sockets/crdtSocket';
 const CRDTPage = () => {
   const crdtRef = useRef<CRDT>(
-    new CRDT(Math.floor(Math.random() * 100) + 1, new LinkedList()),
+    new CRDT(Math.floor(Math.random() * 1000) + 1, new LinkedList()),
   );
   const blockRef = useRef<HTMLParagraphElement>(null);
   const [offset, setOffset] = useState<number>(-1);
+
+  // 커서의 위치 변경
+  const updateCaretPosition = useCallback(
+    (updateOffset: number) => {
+      if (!blockRef.current) return;
+
+      const range = document.createRange();
+      const sel = window.getSelection();
+
+      range.setStart(blockRef.current.childNodes[0], offset + updateOffset);
+      range.collapse(true);
+
+      sel?.removeAllRanges();
+      sel?.addRange(range);
+
+      blockRef.current.focus();
+
+      setOffset(offset + updateOffset);
+
+      console.log('offset: ', offset);
+    },
+    [offset],
+  );
 
   // TODO: 일단 간단하게 구현해보기
   const handleKeydown = (e: React.FormEvent<HTMLParagraphElement>) => {
@@ -25,29 +48,12 @@ const CRDTPage = () => {
         setOffset(offset - 1);
         break;
       case 'ArrowRight':
+        // offset이 글자 수보다 크면 안됨
+        if (offset > crdtRef.current.read().length - 2) return;
         setOffset(offset + 1);
         break;
     }
   };
-
-  const updateCaretPosition = (updateOffset: number) => {
-    if (!blockRef.current) return;
-
-    const range = document.createRange();
-    const selection = window.getSelection();
-
-    range.setStart(blockRef.current.childNodes[0], updateOffset);
-    range.collapse(true);
-
-    selection?.removeAllRanges();
-    selection?.addRange(range);
-
-    blockRef.current.focus();
-
-    setOffset(updateOffset);
-  };
-
-  // [LOCAL]
 
   const handleInput = (e: React.FormEvent<HTMLParagraphElement>) => {
     const event = e.nativeEvent as InputEvent;
@@ -61,9 +67,8 @@ const CRDTPage = () => {
       case 'insertText': {
         console.log('[insert]');
 
-        const index = offset;
         setOffset(offset + 1);
-        const remoteInsertion = crdtRef.current.localInsert(index, value);
+        const remoteInsertion = crdtRef.current.localInsert(offset, value);
         crdtSocket.socket?.emit(SOCKET_EVENT.REMOTE_INSERT, {
           // id는 block id
           id: -1,
@@ -74,9 +79,8 @@ const CRDTPage = () => {
       }
       case 'deleteContentBackward': {
         console.log('[delete]');
-        const index = offset;
         setOffset(offset - 1);
-        const remoteDeletion = crdtRef.current.localDelete(index);
+        const remoteDeletion = crdtRef.current.localDelete(offset);
         console.log(remoteDeletion);
 
         crdtSocket.socket?.emit(SOCKET_EVENT.REMOTE_DELETE, {
@@ -121,7 +125,10 @@ const CRDTPage = () => {
 
         blockRef.current.innerText = crdtRef.current.read();
         if (prevIndex == null) return;
-        updateCaretPosition(Number(prevIndex < offset));
+        console.log('prevIndex: ', prevIndex, 'offset: ', offset);
+        if (prevIndex < offset) {
+          updateCaretPosition(1);
+        }
       },
     );
 
@@ -145,7 +152,10 @@ const CRDTPage = () => {
 
         blockRef.current.innerText = crdtRef.current.read();
         if (targetIndex == null) return;
-        updateCaretPosition(-Number(targetIndex <= offset));
+        if (targetIndex <= offset) {
+          console.log('targetIndex: ', targetIndex, 'offset: ', offset);
+          updateCaretPosition(-1);
+        }
       },
     );
 
@@ -158,7 +168,7 @@ const CRDTPage = () => {
         crdtSocket.socket?.off(event);
       });
     };
-  }, []);
+  }, [offset, updateCaretPosition]);
 
   return (
     <BaseLayout>
@@ -188,13 +198,14 @@ const Container = styled.div`
   margin-top: 2rem;
   background-color: rgba(0, 0, 0, 0.05);
   ${mediaQuery.mobile} {
-    width: 768px;
+    width: 600px;
   }
+  gap: 1rem;
 `;
 
 const Block = styled.p`
   width: 100%;
-  margin-top: 2rem;
+  margin-top: 1rem;
   line-height: 1.5;
   outline: none;
   border: solid 1px gray;
