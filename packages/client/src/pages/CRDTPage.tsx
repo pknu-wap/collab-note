@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react';
 import BaseLayout from '~/components/layouts/BaseLayout';
 import { SOCKET_EVENT } from '~/constants';
 import CRDT from '~/lib/crdt/crdt';
+import Identifier from '~/lib/crdt/identifier';
 import LinkedList from '~/lib/crdt/linkedList';
 import Node from '~/lib/crdt/node';
 import { mediaQuery } from '~/lib/styles';
@@ -19,6 +20,8 @@ const CRDTPage = () => {
     const event = e.nativeEvent as KeyboardEvent;
     switch (event.key) {
       case 'ArrowLeft':
+        // 0보다 작아지면 안됨
+        if (offsetRef.current < 0) return;
         offsetRef.current--;
         break;
       case 'ArrowRight':
@@ -29,35 +32,46 @@ const CRDTPage = () => {
 
   //TODO: cursor 위치는 나중에 신경쓰기
 
-  // local insert
+  // [LOCAL]
 
-  const handleLocalInsert = (e: React.FormEvent<HTMLParagraphElement>) => {
-    console.log('local insert');
-
+  const handleInput = (e: React.FormEvent<HTMLParagraphElement>) => {
     const event = e.nativeEvent as InputEvent;
-    const index = offsetRef.current++;
-    const value = event.data;
+    const value = event.data as string; // null 제거
 
-    if (!value) return;
+    // 한글 입력 중일 때는 무시
+    if (event.isComposing) return console.log('한글 입력 중');
 
-    const remoteInsertion = crdtRef.current.localInsert(index, value);
-    console.log('여기여기', remoteInsertion);
-    crdtSocket.socket?.emit(SOCKET_EVENT.REMOTE_INSERT, {
-      // id는 block id
-      id: -1,
-      operation: remoteInsertion,
-    });
+    // event.inputType에는 insertText, deleteContentBackward, insertFromPaste, formatBold 등이 있다.
+    switch (event.inputType) {
+      case 'insertText': {
+        console.log('[insert]');
+
+        const index = offsetRef.current++;
+        const remoteInsertion = crdtRef.current.localInsert(index, value);
+        crdtSocket.socket?.emit(SOCKET_EVENT.REMOTE_INSERT, {
+          // id는 block id
+          id: -1,
+          operation: remoteInsertion,
+        });
+        break;
+      }
+      case 'deleteContentBackward': {
+        console.log('[delete]');
+        const index = offsetRef.current--;
+        const remoteDeletion = crdtRef.current.localDelete(index);
+        console.log(remoteDeletion);
+
+        crdtSocket.socket?.emit(SOCKET_EVENT.REMOTE_DELETE, {
+          // id는 block id
+          id: -1,
+          operation: remoteDeletion,
+        });
+        break;
+      }
+    }
   };
 
-  const handleLocalDelete = () => {
-    return;
-  };
-
-  const handleLocalUpdate = () => {
-    return;
-  };
-
-  // remote insert
+  // [REMOTE]
 
   useEffect(() => {
     crdtSocket.initCrdtSocket();
@@ -79,24 +93,39 @@ const CRDTPage = () => {
     crdtSocket.socket?.on(
       SOCKET_EVENT.LOCAL_INSERT,
       ({ id, operation }: { id: number; operation: { node: Node } }) => {
+        // id는 block id
+
         crdtRef.current.remoteInsert(operation);
 
-        if (!blockRef.current) {
-          console.log('blockRef.current가 없습니다.');
-          return;
-        }
+        if (!blockRef.current)
+          return console.log('blockRef.current가 없습니다.');
 
         blockRef.current.innerText = crdtRef.current.read();
       },
     );
 
-    crdtSocket.socket?.on(SOCKET_EVENT.LOCAL_DELETE, () => {
-      return;
-    });
+    crdtSocket.socket?.on(
+      SOCKET_EVENT.LOCAL_DELETE,
+      ({
+        id,
+        operation,
+      }: {
+        id: string;
+        operation: {
+          targetId: Identifier | null;
+          clock: number;
+        };
+      }) => {
+        // id는 block id
 
-    crdtSocket.socket?.on(SOCKET_EVENT.LOCAL_UPDATE, () => {
-      return;
-    });
+        crdtRef.current.remoteDelete(operation);
+        if (!blockRef.current)
+          return console.log('blockRef.current가 없습니다.');
+
+        // TODO: 이 부분 수정하기!
+        blockRef.current.innerText = crdtRef.current.read();
+      },
+    );
 
     return () => {
       [
@@ -117,7 +146,7 @@ const CRDTPage = () => {
         <Block
           contentEditable
           ref={blockRef}
-          onInput={handleLocalInsert}
+          onInput={handleInput}
           onKeyDown={handleKeydown}
         />
       </Container>

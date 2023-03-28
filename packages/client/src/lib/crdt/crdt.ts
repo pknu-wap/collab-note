@@ -33,10 +33,6 @@ class CRDT {
   }
 
   localInsert(index: number, value: string) {
-    // 1. 입력된 문자의 left, right를 찾음.
-    // 2. left.id, right.id 사이의 id를 만듦 -> { id, content }, CRDT에 넣기: merge()
-    // 3. socket.emit('insert', operation)
-
     const id = new Identifier(this.clock++, this.client);
 
     const remoteInsertion = this.structure.insertByIndex(id, index, value);
@@ -44,19 +40,7 @@ class CRDT {
     return remoteInsertion;
   }
 
-  localDelete(index: number) {
-    // 1. CRDT에서 n번째 문자 찾기.
-    // 2. CRDT에서 n번째 문자 지우기: merge()
-    // 3. socket.emit('delete', operation)
-
-    return;
-  }
-
-  // 이것은 서버가 클라이언트에게 준 문자를 받아서 CRDT에 넣는 함수입니다.
   remoteInsert({ node }: { node: Node }) {
-    // 1. CRDT에서 받은 문자가 들어가야 할 index를 찾음: findIndex()
-    // 2. CRDT에 넣기: merge()
-
     const prevIndex = this.structure.insertById(node);
 
     // clock이 같은 경우, clock을 증가시킴.
@@ -67,10 +51,29 @@ class CRDT {
     return prevIndex;
   }
 
-  remoteDelete() {
-    // 1. CRDT에서 삭제된 문자의 index를 찾음: findIndex()
-    // 2. CRDT에서 지우기: merge()
-    return;
+  localDelete(index: number) {
+    const targetId = this.structure.deleteByIndex(index);
+
+    // 여기 clock을 증가시키지 않는 이유는, remoteDelete()에서 clock을 증가시키기 때문.
+    return { targetId, clock: this.clock };
+  }
+
+  remoteDelete({
+    targetId,
+    clock,
+  }: {
+    targetId: Identifier | null;
+    clock: number;
+  }) {
+    const targetIndex = this.structure.deleteById(targetId);
+
+    // clock이 같은 경우, clock을 증가시킴.
+    // localDelete()에서 clock을 증가시키지 않았기 때문에, 여기서 clock을 증가시켜야 함.
+    if (++this.clock < clock) {
+      this.clock = clock + 1;
+    }
+
+    return targetIndex;
   }
 
   read() {

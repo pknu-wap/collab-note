@@ -188,9 +188,30 @@ class LinkedList {
     }
   }
 
-  deleteById() {
-    // remote operation
-    return '변경이 일어난 인덱스';
+  deleteById(id: Identifier | null) {
+    try {
+      // head를 삭제하는 경우
+      // head가 존재하지 않으면, 에러 발생
+      if (!id) {
+        const head = this.getHeadNode();
+        if (!head) throw new Error('head not found');
+        this.head = head.next;
+        return null;
+      }
+
+      const { node: targetNode, index: targetIndex } = this.findById(id);
+      if (!targetNode) throw new Error('node not found');
+      const prevNode = this.findByIndex(targetIndex - 1);
+
+      prevNode.next = targetNode.next;
+
+      this.deleteNode(id);
+
+      return targetIndex;
+    } catch (error) {
+      // ??
+      console.error(error);
+    }
   }
 
   stringify(): string {
