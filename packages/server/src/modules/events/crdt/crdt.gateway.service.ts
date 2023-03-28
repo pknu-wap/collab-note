@@ -29,27 +29,28 @@ export class CrdtGatewayService {
   }
 
   async onRemoteInsert(client: Socket, { id, operation }: RemoteInsertDto) {
-    this.logger.verbose(
-      `RemoteInsert: id:${id}, clock:${operation.node.id.clock} value:${operation.node.value}`,
-    );
-
+    // id는 block id를 의미한다.
     try {
       this.crdt.remoteInsert(operation);
       client.broadcast.emit(SOCKET_EVENT.LOCAL_INSERT, { id, operation });
     } catch (error) {
-      // 이전 상태로 돌리기
-      // initBlock(id);
+      //TODO: 이전 상태로 돌리기
       this.logger.error(error);
     }
   }
 
   onRemoteDelete(client: Socket, { id, operation }: RemoteDeleteDto) {
-    const data = {};
-    this.server.emit(SOCKET_EVENT.LOCAL_DELETE, data);
+    // id는 block id를 의미한다.
+    try {
+      this.crdt.remoteDelete(operation);
+      client.broadcast.emit(SOCKET_EVENT.LOCAL_DELETE, { id, operation });
+    } catch (error) {
+      this.logger.error(error);
+    }
   }
 
   onRemoteUpdate(client: Socket, { id, operations }: RemoteUpdateDto) {
     const data = {};
-    this.server.emit(SOCKET_EVENT.LOCAL_UPDATE, data);
+    client.broadcast.emit(SOCKET_EVENT.LOCAL_UPDATE, data);
   }
 }
