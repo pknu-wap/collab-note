@@ -57,7 +57,7 @@ class LinkedList {
         this.head = id;
 
         console.log(
-          '[id]',
+          '[clock]',
           node.id.clock,
           '[value]',
           node.value,
@@ -75,7 +75,7 @@ class LinkedList {
       node.prev = prevNode.id;
 
       console.log(
-        '[id]',
+        '[clock]',
         node.id.clock,
         '[value]',
         node.value,
@@ -147,18 +147,17 @@ class LinkedList {
 
   deleteByIndex(index: number) {
     try {
-      // head를 삭제하는 경우
+      // head deleted
       if (index === 0) {
         const head = this.getHeadNode();
 
-        // head가 존재하지 않으면, 에러 발생
-        if (!head) throw new Error('head not found');
+        if (!head) throw new Error('head가 없는데 어떻게 삭제하셨나요 ^^');
 
         const nextNode = this.getNode(head.next);
 
-        // head의 next가 존재하지 않으면, head를 삭제하고, head를 null로 설정
         if (!nextNode) {
           this.head = null;
+
           return null;
         }
 
@@ -170,21 +169,20 @@ class LinkedList {
         return null;
       }
 
-      // head를 제외한 node를 삭제하는 경우
       const prevNode = this.findByIndex(index - 1);
-      if (!prevNode.next) throw new Error('node not found');
 
-      // 삭제할 node를 찾아서 targetNode에 할당
+      if (!prevNode.next) throw new Error();
+
       const targetNode = this.getNode(prevNode.next);
 
-      if (!targetNode) throw new Error('node not found');
+      if (!targetNode) throw new Error();
 
       this.deleteNode(targetNode.id);
       prevNode.next = targetNode.next;
 
       return targetNode.id;
     } catch (e) {
-      console.log(e);
+      console.error('deleteByIndex error\n', e);
     }
   }
 

@@ -43,7 +43,7 @@ export class CrdtGatewayService {
     // id는 block id를 의미한다.
     try {
       this.crdt.remoteDelete(operation);
-      this.server.emit(SOCKET_EVENT.LOCAL_DELETE, { id, operation });
+      client.broadcast.emit(SOCKET_EVENT.LOCAL_DELETE, { id, operation });
     } catch (error) {
       this.logger.error(error);
     }
@@ -51,6 +51,6 @@ export class CrdtGatewayService {
 
   onRemoteUpdate(client: Socket, { id, operations }: RemoteUpdateDto) {
     const data = {};
-    this.server.emit(SOCKET_EVENT.LOCAL_UPDATE, data);
+    client.broadcast.emit(SOCKET_EVENT.LOCAL_UPDATE, data);
   }
 }

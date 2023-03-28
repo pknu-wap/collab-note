@@ -9,23 +9,23 @@ class CRDT {
 
   constructor(client: number, initialStructure: LinkedList) {
     this.client = client;
+
     this.structure = new LinkedList(initialStructure);
 
     const { nodeMap } = initialStructure;
 
-    // 처음 생성할 때
-    if (!nodeMap || !nodeMap.size) {
+    if (!nodeMap || !Object.keys(nodeMap).length) {
       this.clock = 1;
       return this;
     }
 
-    // 처음 생성이 아닐 때
-    // nodeMap의 clock 중 가장 큰 값을 찾아서 clock에 넣음.
+    // logical clock 동기화를 위함
     const maxClock = Object.keys(nodeMap)
       .map((id) => Number(JSON.parse(id).clock))
-      .reduce((acc, cur) => Math.max(acc, cur), 0);
+      .reduce((prev, cur) => Math.max(prev, cur), 0);
 
     this.clock = maxClock + 1;
+    console.log('clock', this.clock);
   }
 
   get data() {

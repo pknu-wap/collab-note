@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import BaseLayout from '~/components/layouts/BaseLayout';
 import { SOCKET_EVENT } from '~/constants';
 import CRDT from '~/lib/crdt/crdt';
@@ -13,7 +13,7 @@ const CRDTPage = () => {
     new CRDT(Math.floor(Math.random() * 100) + 1, new LinkedList()),
   );
   const blockRef = useRef<HTMLParagraphElement>(null);
-  const offsetRef = useRef<number>(-1); // index -1부터 해야하는 듯???
+  const [offset, setOffset] = useState<number>(-1);
 
   // TODO: 일단 간단하게 구현해보기
   const handleKeydown = (e: React.FormEvent<HTMLParagraphElement>) => {
@@ -21,16 +21,31 @@ const CRDTPage = () => {
     switch (event.key) {
       case 'ArrowLeft':
         // 0보다 작아지면 안됨
-        if (offsetRef.current < 0) return;
-        offsetRef.current--;
+        if (offset < 0) return;
+        setOffset(offset - 1);
         break;
       case 'ArrowRight':
-        offsetRef.current++;
+        setOffset(offset + 1);
         break;
     }
   };
 
-  //TODO: cursor 위치는 나중에 신경쓰기
+  const updateCaretPosition = (updateOffset: number) => {
+    if (!blockRef.current) return;
+
+    const range = document.createRange();
+    const selection = window.getSelection();
+
+    range.setStart(blockRef.current.childNodes[0], updateOffset);
+    range.collapse(true);
+
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+
+    blockRef.current.focus();
+
+    setOffset(updateOffset);
+  };
 
   // [LOCAL]
 
@@ -46,18 +61,21 @@ const CRDTPage = () => {
       case 'insertText': {
         console.log('[insert]');
 
-        const index = offsetRef.current++;
+        const index = offset;
+        setOffset(offset + 1);
         const remoteInsertion = crdtRef.current.localInsert(index, value);
         crdtSocket.socket?.emit(SOCKET_EVENT.REMOTE_INSERT, {
           // id는 block id
           id: -1,
           operation: remoteInsertion,
         });
+
         break;
       }
       case 'deleteContentBackward': {
         console.log('[delete]');
-        const index = offsetRef.current--;
+        const index = offset;
+        setOffset(offset - 1);
         const remoteDeletion = crdtRef.current.localDelete(index);
         console.log(remoteDeletion);
 
@@ -66,6 +84,7 @@ const CRDTPage = () => {
           id: -1,
           operation: remoteDeletion,
         });
+
         break;
       }
     }
@@ -95,12 +114,14 @@ const CRDTPage = () => {
       ({ id, operation }: { id: number; operation: { node: Node } }) => {
         // id는 block id
 
-        crdtRef.current.remoteInsert(operation);
+        const prevIndex = crdtRef.current.remoteInsert(operation);
 
         if (!blockRef.current)
           return console.log('blockRef.current가 없습니다.');
 
         blockRef.current.innerText = crdtRef.current.read();
+        if (prevIndex == null) return;
+        updateCaretPosition(Number(prevIndex < offset));
       },
     );
 
@@ -118,12 +139,13 @@ const CRDTPage = () => {
       }) => {
         // id는 block id
 
-        crdtRef.current.remoteDelete(operation);
+        const targetIndex = crdtRef.current.remoteDelete(operation);
         if (!blockRef.current)
           return console.log('blockRef.current가 없습니다.');
 
-        // TODO: 이 부분 수정하기!
         blockRef.current.innerText = crdtRef.current.read();
+        if (targetIndex == null) return;
+        updateCaretPosition(-Number(targetIndex <= offset));
       },
     );
 
@@ -142,6 +164,7 @@ const CRDTPage = () => {
     <BaseLayout>
       <Container>
         <div>CRDT TEST PAGE</div>
+        <div>offset: {offset}</div>
         {/* contentEditable은 다른 tag를 input, textarea로 만들어 준다. */}
         <Block
           contentEditable
