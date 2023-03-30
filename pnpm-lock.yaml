@@ -34,7 +34,7 @@ importers:
 
   packages/client:
     specifiers:
-      '@collab-note/shared': workspace:*
+      '@collab-note/common': workspace:*
       '@emotion/babel-plugin': ^11.10.6
       '@emotion/react': ^11.10.6
       '@emotion/styled': ^11.10.6
@@ -69,7 +69,7 @@ importers:
       vite-tsconfig-paths: ^4.0.5
       zustand: ^4.3.5
     dependencies:
-      '@collab-note/shared': link:../shared
+      '@collab-note/common': link:../common
       '@emotion/react': 11.10.6_pmekkgnqduwlme35zpnqhenc34
       '@emotion/styled': 11.10.6_oouaibmszuch5k64ms7uxp2aia
       '@tanstack/react-query': 4.26.1_biqbaboplfbrettd7655fr4n2y
@@ -105,9 +105,12 @@ importers:
       vite: 4.1.4
       vite-tsconfig-paths: 4.0.7_vwvfc4ezh6jlf6pa67auy3eulu
 
+  packages/common:
+    specifiers: {}
+
   packages/server:
     specifiers:
-      '@collab-note/shared': workspace:*
+      '@collab-note/common': workspace:*
       '@nestjs/cli': ^9.0.0
       '@nestjs/common': ^9.0.0
       '@nestjs/config': ^2.3.1
@@ -147,7 +150,7 @@ importers:
       ts-node: ^10.0.0
       tsconfig-paths: 4.1.1
     dependencies:
-      '@collab-note/shared': link:../shared
+      '@collab-note/common': link:../common
       '@nestjs/common': 9.3.10_welcnyot5bzd5wa2aovbkxpi4i
       '@nestjs/config': 2.3.1_z7yklwa5kpd33rbhggxjjac2ei
       '@nestjs/core': 9.3.10_i2tkvbtpib2wozcqyjnrgbgzoy
@@ -187,9 +190,6 @@ importers:
       ts-loader: 9.4.2
       ts-node: 10.9.1_@types+node@18.11.18
       tsconfig-paths: 4.1.1
-
-  packages/shared:
-    specifiers: {}
 
 packages:
 

@@ -16,7 +16,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@collab-note/shared': resolve(__dirname, '../shared/src'),
+      '@collab-note/common': resolve(__dirname, '../shared/src'),
     },
   },
 });

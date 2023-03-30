@@ -16,7 +16,7 @@
     "prisma:push": "pnpm dlx prisma db push"
   },
   "dependencies": {
-    "@collab-note/shared": "workspace:*",
+    "@collab-note/common": "workspace:*",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.3.1",
     "@nestjs/core": "^9.0.0",

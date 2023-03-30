@@ -1,9 +1,0 @@
-{
-  "name": "@collab-note/shared",
-  "version": "1.0.0",
-  "main": "dist/index.js",
-  "scripts": {
-    "build": "tsc --incremental",
-    "dev": "tsc --watch --incremental"
-  }
-}
