@@ -4,7 +4,5 @@ export default () => ({
   FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:3000',
   // 나중에 수정할 것
   ALLOWLIST:
-    process.env.NODE_ENV === 'production'
-      ? /collab-note.vercel.app/
-      : /localhost/,
+    process.env.NODE_ENV === 'production' ? /note.wap-dev.store/ : /localhost/,
 });
