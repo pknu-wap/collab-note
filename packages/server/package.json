@@ -1,5 +1,5 @@
 {
-  "name": "server",
+  "name": "@collab-note/server",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -16,6 +16,7 @@
     "prisma:push": "pnpm dlx prisma db push"
   },
   "dependencies": {
+    "@collab-note/shared": "workspace:*",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.3.1",
     "@nestjs/core": "^9.0.0",

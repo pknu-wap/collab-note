@@ -6,6 +6,7 @@ import helmet from 'helmet';
 import { AppModule } from '~/app.module';
 import { createDocumnet } from '~/lib/swagger';
 import { SocketIoAdapter } from '~/adapters';
+import { add } from '@collab-note/shared';
 
 const bootstrap = async () => {
   const app = await NestFactory.create(AppModule);
@@ -38,6 +39,7 @@ const bootstrap = async () => {
   await app.listen(PORT);
 
   logger.log(`Server is running on port ${PORT}`);
+  logger.log(`add(1, 2) = ${add(1, 2)}`);
 };
 
 bootstrap();
