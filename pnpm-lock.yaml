@@ -117,7 +117,7 @@ importers:
       '@nestjs/swagger': ^6.2.1
       '@nestjs/testing': ^9.0.0
       '@nestjs/websockets': ^9.3.9
-      '@prisma/client': ^4.11.0
+      '@prisma/client': ^4.12.0
       '@types/cookie-parser': ^1.4.3
       '@types/express': ^4.17.13
       '@types/jest': 29.2.4
@@ -153,7 +153,7 @@ importers:
       '@nestjs/platform-socket.io': 9.3.10_ix52exclojweof7jgzapqibjfe
       '@nestjs/swagger': 6.2.1_wyaadnjofczeax4mlaw2u3iwam
       '@nestjs/websockets': 9.3.10_qbcmjeipsdh37q7ieeqzg52f44
-      '@prisma/client': 4.11.0_prisma@4.11.0
+      '@prisma/client': 4.12.0_prisma@4.11.0
       class-transformer: 0.5.1
       class-validator: 0.14.0
       cookie-parser: 1.4.6
@@ -2914,8 +2914,8 @@ packages:
       - supports-color
     dev: true
 
-  /@prisma/client/4.11.0_prisma@4.11.0:
-    resolution: {integrity: sha512-0INHYkQIqgAjrt7NzhYpeDQi8x3Nvylc2uDngKyFDDj1tTRQ4uV1HnVmd1sQEraeVAN63SOK0dgCKQHlvjL0KA==}
+  /@prisma/client/4.12.0_prisma@4.11.0:
+    resolution: {integrity: sha512-j9/ighfWwux97J2dS15nqhl60tYoH8V0IuSsgZDb6bCFcQD3fXbXmxjYC8GHhIgOk3lB7Pq+8CwElz2MiDpsSg==}
     engines: {node: '>=14.17'}
     requiresBuild: true
     peerDependencies:
@@ -2924,12 +2924,12 @@ packages:
       prisma:
         optional: true
     dependencies:
-      '@prisma/engines-version': 4.11.0-57.8fde8fef4033376662cad983758335009d522acb
+      '@prisma/engines-version': 4.12.0-67.659ef412370fa3b41cd7bf6e94587c1dfb7f67e7
       prisma: 4.11.0
     dev: false
 
-  /@prisma/engines-version/4.11.0-57.8fde8fef4033376662cad983758335009d522acb:
-    resolution: {integrity: sha512-3Vd8Qq06d5xD8Ch5WauWcUUrsVPdMC6Ge8ILji8RFfyhUpqon6qSyGM0apvr1O8n8qH8cKkEFqRPsYjuz5r83g==}
+  /@prisma/engines-version/4.12.0-67.659ef412370fa3b41cd7bf6e94587c1dfb7f67e7:
+    resolution: {integrity: sha512-JIHNj5jlXb9mcaJwakM0vpgRYJIAurxTUqM0iX0tfEQA5XLZ9ONkIckkhuAKdAzocZ+80GYg7QSsfpjg7OxbOA==}
     dev: false
 
   /@prisma/engines/4.11.0:

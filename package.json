@@ -7,10 +7,9 @@
   "repository": "https://github.com/neko113/CollabNote",
   "author": "neko113 <alstn113@gmail.com>",
   "scripts": {
-    "dev": "concurrently \"pnpm --filter client dev\" \"pnpm --filter server start:dev\"",
+    "dev": "pnpm --parallel --stream -r dev",
+    "build": "pnpm --stream -r build",
     "storybook": "pnpm --filter client storybook",
-    "build:client": "pnpm --filter client build",
-    "build:server": "pnpm --filter server build",
     "start:pm2": "pnpm --filter server start:pm2",
     "prisma:generate": "pnpm --filter server prisma:generate",
     "prisma:studio": "pnpm --filter server prisma:studio",
