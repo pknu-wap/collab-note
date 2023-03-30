@@ -1,6 +1,6 @@
-import Identifier from './identifier';
+import { Identifier } from './identifier';
 
-class Node {
+export class Node {
   id: Identifier;
   value: string;
   prev: Identifier | null;
@@ -26,5 +26,3 @@ class Node {
     return false;
   }
 }
-
-export default Node;

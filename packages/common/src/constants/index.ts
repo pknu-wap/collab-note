@@ -1,4 +1,4 @@
-const SOCKET_EVENT = {
+export const SOCKET_EVENT = {
   // Note Socket Events
   JOIN_NOTE: 'JOIN_NOTE',
   LEAVE_NOTE: 'LEAVE_NOTE',
@@ -24,5 +24,3 @@ const SOCKET_EVENT = {
   REMOTE_DELETE: 'REMOTE_DELETE',
   REMOTE_UPDATE: 'REMOTE_UPDATE',
 } as const;
-
-export default SOCKET_EVENT;

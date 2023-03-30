@@ -1,8 +1,8 @@
-import Identifier from './identifier';
-import LinkedList from './linkedList';
-import Node from './node';
+import { Identifier } from './identifier';
+import { LinkedList } from './linked-list';
+import { Node } from './node';
 
-class CRDT {
+export class CRDT {
   private clock: number;
   private client: number;
   private structure: LinkedList;
@@ -80,5 +80,3 @@ class CRDT {
     return this.structure.stringify();
   }
 }
-
-export default CRDT;

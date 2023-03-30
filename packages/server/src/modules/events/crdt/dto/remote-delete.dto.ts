@@ -1,4 +1,4 @@
-import Identifier from '~/lib/crdt/identifier';
+import { Identifier } from '@collab-note/common';
 
 export class RemoteDeleteDto {
   id: string;

@@ -1,13 +1,16 @@
 import styled from '@emotion/styled';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import BaseLayout from '~/components/layouts/BaseLayout';
-import { SOCKET_EVENT } from '@collab-note/common';
-import CRDT from '~/lib/crdt/crdt';
-import Identifier from '~/lib/crdt/identifier';
-import LinkedList from '~/lib/crdt/linkedList';
-import Node from '~/lib/crdt/node';
+import {
+  SOCKET_EVENT,
+  CRDT,
+  Identifier,
+  LinkedList,
+  Node,
+} from '@collab-note/common';
 import { mediaQuery } from '~/lib/styles';
 import crdtSocket from '~/sockets/crdtSocket';
+
 const CRDTPage = () => {
   const crdtRef = useRef<CRDT>(
     new CRDT(Math.floor(Math.random() * 1000) + 1, new LinkedList()),

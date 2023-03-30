@@ -1,2 +1,2 @@
-export { default as SOCKET_EVENT } from './constants';
-export { default as CRDT } from './crdt';
+export * from './constants';
+export * from './crdt';
