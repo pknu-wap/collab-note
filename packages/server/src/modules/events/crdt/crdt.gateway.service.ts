@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
-import { SOCKET_EVENT } from '~/common/constants';
+import { SOCKET_EVENT } from '@collab-note/common';
 import { RemoteDeleteDto, RemoteInsertDto, RemoteUpdateDto } from './dto';
 import CRDT from '~/lib/crdt/crdt';
 import LinkedList from '~/lib/crdt/linkedList';

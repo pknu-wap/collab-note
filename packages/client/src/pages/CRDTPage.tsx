@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import BaseLayout from '~/components/layouts/BaseLayout';
-import { SOCKET_EVENT } from '~/constants';
+import { SOCKET_EVENT } from '@collab-note/common';
 import CRDT from '~/lib/crdt/crdt';
 import Identifier from '~/lib/crdt/identifier';
 import LinkedList from '~/lib/crdt/linkedList';

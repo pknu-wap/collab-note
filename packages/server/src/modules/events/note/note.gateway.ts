@@ -6,7 +6,7 @@ import {
   WebSocketGateway,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { SOCKET_EVENT } from '~/common/constants';
+import { SOCKET_EVENT } from '@collab-note/common';
 import {
   JoinNoteDto,
   LeaveNoteDto,
