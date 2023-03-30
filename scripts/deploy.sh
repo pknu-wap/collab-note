@@ -2,5 +2,5 @@
 
 pnpm install
 pnpm prisma:generate
-
-./scripts/deploy-server.sh
+pnpm build
+pnpm start:pm2
