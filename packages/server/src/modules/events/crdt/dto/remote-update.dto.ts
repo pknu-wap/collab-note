@@ -1,4 +1,4 @@
-import Node from '~/lib/crdt/node';
+import { Node } from '@collab-note/common';
 
 export class RemoteUpdateDto {
   id: string;

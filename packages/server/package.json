@@ -1,5 +1,5 @@
 {
-  "name": "server",
+  "name": "@collab-note/server",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -9,13 +9,14 @@
     "build": "nest build",
     "lint": "eslint \"src/**/*.ts\" --config ./.eslintrc.js --fix",
     "format": "prettier \"src/**/*.ts\" --write",
-    "start:dev": "NODE_ENV=development nest start --watch",
+    "dev": "NODE_ENV=development nest start --watch",
     "start:pm2": "pnpm pm2 start ecosystem.config.js",
     "prisma:generate": "pnpm dlx prisma generate",
     "prisma:studio": "pnpm dlx prisma studio",
     "prisma:push": "pnpm dlx prisma db push"
   },
   "dependencies": {
+    "@collab-note/common": "workspace:*",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.3.1",
     "@nestjs/core": "^9.0.0",
@@ -25,7 +26,7 @@
     "@nestjs/platform-socket.io": "^9.3.9",
     "@nestjs/swagger": "^6.2.1",
     "@nestjs/websockets": "^9.3.9",
-    "@prisma/client": "^4.11.0",
+    "@prisma/client": "^4.12.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "cookie-parser": "^1.4.6",

@@ -24,5 +24,3 @@ export const SOCKET_EVENT = {
   REMOTE_DELETE: 'REMOTE_DELETE',
   REMOTE_UPDATE: 'REMOTE_UPDATE',
 } as const;
-
-export type Event = (typeof SOCKET_EVENT)[keyof typeof SOCKET_EVENT];

@@ -1,4 +1,4 @@
-class Identifier {
+export class Identifier {
   clock: number;
   client: number;
   constructor(clock: number, client: number) {
@@ -6,5 +6,3 @@ class Identifier {
     this.client = client;
   }
 }
-
-export default Identifier;

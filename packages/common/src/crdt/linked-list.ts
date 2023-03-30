@@ -1,11 +1,11 @@
-import Identifier from './identifier';
-import Node from './node';
+import { Identifier } from './identifier';
+import { Node } from './node';
 
-interface NodeMap {
+export interface NodeMap {
   [index: string]: Node;
 }
 
-class LinkedList {
+export class LinkedList {
   head: Identifier | null;
   nodeMap: NodeMap;
 
@@ -276,5 +276,3 @@ class LinkedList {
     delete this.nodeMap[JSON.stringify(id)];
   }
 }
-
-export default LinkedList;

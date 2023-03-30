@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { SOCKET_EVENT } from '~/constants';
+import { SOCKET_EVENT } from '@collab-note/common';
 import noteSocket from '~/sockets/noteSocket';
 import useConnectedUsersStore from '~/stores/useConnectedUsersStore';
 import useMyMediaStreamStore from '~/stores/useMyMediaStreamStore';
