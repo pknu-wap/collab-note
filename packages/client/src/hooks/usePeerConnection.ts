@@ -124,10 +124,12 @@ const usePeerConnection = () => {
       onReceivedIceCandidate,
     );
     return () => {
-      noteSocket.socket?.off(SOCKET_EVENT.NEW_USER);
-      noteSocket.socket?.off(SOCKET_EVENT.RECEIVED_OFFER);
-      noteSocket.socket?.off(SOCKET_EVENT.RECEIVED_ANSWER);
-      noteSocket.socket?.off(SOCKET_EVENT.RECEIVED_ICE_CANDIDATE);
+      [
+        SOCKET_EVENT.NEW_USER,
+        SOCKET_EVENT.RECEIVED_OFFER,
+        SOCKET_EVENT.RECEIVED_ANSWER,
+        SOCKET_EVENT.RECEIVED_ICE_CANDIDATE,
+      ].forEach((event) => noteSocket.socket?.off(event));
 
       if (userStreams) {
         Object.keys(userStreams).forEach((sid) => {
