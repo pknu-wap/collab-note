@@ -13,13 +13,7 @@ const usePeerConnection = () => {
   const RTCConfig = {
     iceServers: [
       {
-        urls: [
-          'stun:stun.l.google.com:19302',
-          'stun:stun1.l.google.com:19302',
-          'stun:stun2.l.google.com:19302',
-          'stun:stun3.l.google.com:19302',
-          'stun:stun4.l.google.com:19302',
-        ],
+        urls: ['stun:stun.l.google.com:19302'],
       },
     ],
   };
@@ -49,7 +43,6 @@ const usePeerConnection = () => {
 
   const onNewUser = async ({ sid }: { sid: string }) => {
     const pc = createPeerConnection(sid);
-    if (!pc) return;
 
     setConnectedUsers([...connectedUsers, { sid }]);
 
@@ -75,7 +68,6 @@ const usePeerConnection = () => {
     offer: RTCSessionDescriptionInit;
   }) => {
     const pc = createPeerConnection(sid);
-    if (!pc) return;
 
     await pc.setRemoteDescription(new RTCSessionDescription(offer));
     const answer = await pc.createAnswer();
@@ -130,17 +122,8 @@ const usePeerConnection = () => {
         SOCKET_EVENT.RECEIVED_ANSWER,
         SOCKET_EVENT.RECEIVED_ICE_CANDIDATE,
       ].forEach((event) => noteSocket.socket?.off(event));
-
-      if (userStreams) {
-        Object.keys(userStreams).forEach((sid) => {
-          const pc = pcsRef.current?.[sid];
-          if (!pc) return;
-          pc.close();
-          delete pcsRef.current[sid];
-        });
-      }
     };
-  }, [userStreams, myMediaStream]);
+  }, [userStreams, myMediaStream, connectedUsers, userStreams]);
 };
 
 export default usePeerConnection;
