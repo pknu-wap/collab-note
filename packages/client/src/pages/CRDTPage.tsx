@@ -41,12 +41,33 @@ const CRDTPage = () => {
     [offset],
   );
 
+  const handleClick = () => {
+    if (!blockRef.current) return;
+
+    const selection = window.getSelection();
+
+    if (selection?.rangeCount) {
+      const range = selection.getRangeAt(0);
+
+      const preCaretRange = range.cloneRange();
+      preCaretRange.selectNodeContents(
+        blockRef.current as HTMLParagraphElement,
+      );
+      preCaretRange.setEnd(range.endContainer, range.endOffset);
+      const maxOffset = preCaretRange.toString().length;
+
+      const nextOffset = range.startOffset + offset;
+
+      setOffset(Math.min(maxOffset, Math.max(0, nextOffset)));
+    }
+  };
+
   // TODO: 일단 간단하게 구현해보기
   const handleKeydown = (e: React.FormEvent<HTMLParagraphElement>) => {
     const event = e.nativeEvent as KeyboardEvent;
     switch (event.key) {
       case 'ArrowLeft':
-        // 0보다 작아지면 안됨
+        // offset이 -1보다 작으면 안됨
         if (offset < 0) return;
         setOffset(offset - 1);
         break;
@@ -182,6 +203,7 @@ const CRDTPage = () => {
         <Block
           contentEditable
           ref={blockRef}
+          onClick={handleClick}
           onInput={handleInput}
           onKeyDown={handleKeydown}
         />
