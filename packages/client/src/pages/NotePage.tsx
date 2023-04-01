@@ -45,9 +45,8 @@ const NotePage = () => {
     });
     noteSocket.receiveExistingNoteUsers({
       done: (users) => {
+        console.log('existing note users', users);
         users.forEach((user) => {
-          console.log('existing note user', user);
-
           addConnectedUser({ sid: user.sid });
         });
       },
