@@ -18,9 +18,37 @@ const HomePage = () => {
   const crdtRef = useRef<CRDT>(new CRDT(clientId.current, new LinkedList()));
   const blockRef = useRef<HTMLParagraphElement>(null);
 
-  const { offsetHandlers, offsetRef, setOffset } = useOffset(blockRef);
+  const { offsetHandlers, offsetRef, setOffset, clearOffset } =
+    useOffset(blockRef);
 
-  const updateCaretPosition = () => {
+  const updateCaretPosition = (updateOffset = 0) => {
+    if (offsetRef.current === null) return;
+
+    const selection = window.getSelection();
+
+    if (!selection) return;
+
+    selection.removeAllRanges();
+
+    const range = new Range();
+
+    if (!blockRef.current) return;
+
+    // 우선 블럭의 첫번째 text node로 고정, text node가 없는 경우 clearOffset()
+    if (!blockRef.current.firstChild) {
+      clearOffset();
+      return;
+    }
+
+    // range start와 range end가 같은 경우만 가정
+    range.setStart(
+      blockRef.current.firstChild,
+      offsetRef.current + updateOffset,
+    );
+    range.collapse();
+    selection.addRange(range);
+
+    // 변경된 offset 반영
     setOffset();
   };
 
@@ -87,7 +115,7 @@ const HomePage = () => {
         blockRef.current.innerText = crdtRef.current.read();
 
         if (prevIndex == null || offsetRef.current === null) return;
-        updateCaretPosition();
+        updateCaretPosition(Number(prevIndex < offsetRef.current));
       },
     );
 
@@ -109,7 +137,7 @@ const HomePage = () => {
         blockRef.current.innerText = crdtRef.current.read();
 
         if (targetIndex == null || offsetRef.current === null) return;
-        updateCaretPosition();
+        updateCaretPosition(-Number(targetIndex <= offsetRef.current));
       },
     );
 
