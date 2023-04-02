@@ -56,14 +56,6 @@ export class LinkedList {
         node.prev = null;
         this.head = id;
 
-        console.log(
-          '[clock]',
-          node.id.clock,
-          '[value]',
-          node.value,
-          '[index]',
-          index,
-        );
         return { node };
       }
 
@@ -74,20 +66,9 @@ export class LinkedList {
 
       node.prev = prevNode.id;
 
-      console.log(
-        '[clock]',
-        node.id.clock,
-        '[value]',
-        node.value,
-        '[index]',
-        index,
-        '[nodemap]',
-        this.nodeMap,
-      );
-
       return { node };
     } catch (e) {
-      console.error('insertByIndex error\n', e);
+      console.error(e);
     }
   }
 
@@ -151,7 +132,7 @@ export class LinkedList {
       if (index === 0) {
         const head = this.getHeadNode();
 
-        if (!head) throw new Error('head가 없는데 어떻게 삭제하셨나요 ^^');
+        if (!head) throw new Error('head not found');
 
         const nextNode = this.getNode(head.next);
 
@@ -182,7 +163,7 @@ export class LinkedList {
 
       return targetNode.id;
     } catch (e) {
-      console.error('deleteByIndex error\n', e);
+      console.error(e);
     }
   }
 

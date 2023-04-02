@@ -25,7 +25,6 @@ export class CRDT {
       .reduce((prev, cur) => Math.max(prev, cur), 0);
 
     this.clock = maxClock + 1;
-    console.log('clock', this.clock);
   }
 
   get data() {
