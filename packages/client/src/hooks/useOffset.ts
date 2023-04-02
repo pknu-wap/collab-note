@@ -1,7 +1,9 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 
-const useOffset = (blockRef: React.RefObject<HTMLParagraphElement>) => {
-  const offsetRef = useRef<number | null>(null);
+const useOffset = <T extends HTMLElement = HTMLParagraphElement>(
+  blockRef: React.RefObject<T>,
+) => {
+  const offsetRef = useRef<number>(0);
 
   const setOffset = (offset = 0) => {
     if (!blockRef.current) return;
@@ -12,7 +14,7 @@ const useOffset = (blockRef: React.RefObject<HTMLParagraphElement>) => {
     const range = selection.getRangeAt(0);
 
     const preCaretRange = range.cloneRange();
-    preCaretRange.selectNodeContents(blockRef.current as HTMLParagraphElement);
+    preCaretRange.selectNodeContents(blockRef.current);
     preCaretRange.setEnd(range.endContainer, range.endOffset);
     const maxOffset = preCaretRange.toString().length;
 
@@ -24,31 +26,17 @@ const useOffset = (blockRef: React.RefObject<HTMLParagraphElement>) => {
   };
 
   const clearOffset = () => {
-    offsetRef.current = null;
+    offsetRef.current = 0;
   };
 
-  // keydown 이벤트는 키 입력의 내용 반영 이전에 발생
   const onArrowKeyDown: React.KeyboardEventHandler = (e) => {
-    const ARROW_LEFT = 'ArrowLeft';
-    const ARROW_RIGHT = 'ArrowRight';
-
     switch (e.nativeEvent.key) {
-      case ARROW_LEFT:
+      case 'ArrowLeft':
         setOffset(-1);
-        return;
-      case ARROW_RIGHT:
+        break;
+      case 'ArrowRight':
         setOffset(1);
-        return;
-    }
-  };
-
-  // 위 아래 방향키 이동은 keyDown에서 핸들링하지 않음
-  const onArrowKeyup: React.KeyboardEventHandler = (e) => {
-    const ARROW_DOWN = 'ArrowDown';
-    const ARROW_UP = 'ArrowUp';
-
-    if ([ARROW_DOWN, ARROW_UP].includes(e.nativeEvent.key)) {
-      setOffset();
+        break;
     }
   };
 
@@ -59,7 +47,7 @@ const useOffset = (blockRef: React.RefObject<HTMLParagraphElement>) => {
   const offsetHandlers = {
     onClick,
     onBlur: clearOffset,
-    onKeyUp: onArrowKeyup,
+    onKeyDown: onArrowKeyDown,
   };
 
   return {

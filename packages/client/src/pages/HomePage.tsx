@@ -18,37 +18,9 @@ const HomePage = () => {
   const crdtRef = useRef<CRDT>(new CRDT(clientId.current, new LinkedList()));
   const blockRef = useRef<HTMLParagraphElement>(null);
 
-  const { clearOffset, offsetHandlers, offsetRef, onArrowKeyDown, setOffset } =
-    useOffset(blockRef);
+  const { offsetHandlers, offsetRef, setOffset } = useOffset(blockRef);
 
-  const updateCaretPosition = (updateOffset = 0) => {
-    if (offsetRef.current === null) return;
-
-    const selection = window.getSelection();
-
-    if (!selection) return;
-
-    selection.removeAllRanges();
-
-    const range = new Range();
-
-    if (!blockRef.current) return;
-
-    // 우선 블럭의 첫번째 text node로 고정, text node가 없는 경우 clearOffset()
-    if (!blockRef.current.firstChild) {
-      clearOffset();
-      return;
-    }
-
-    // range start와 range end가 같은 경우만 가정
-    range.setStart(
-      blockRef.current.firstChild,
-      offsetRef.current + updateOffset,
-    );
-    range.collapse();
-    selection.addRange(range);
-
-    // 변경된 offset 반영
+  const updateCaretPosition = () => {
     setOffset();
   };
 
@@ -64,9 +36,10 @@ const HomePage = () => {
     switch (event.inputType) {
       case 'insertText': {
         const remoteInsertion = crdtRef.current.localInsert(
-          offsetRef.current,
+          offsetRef.current - 2,
           value,
         );
+
         crdtSocket.socket?.emit(SOCKET_EVENT.REMOTE_INSERT, {
           operation: remoteInsertion,
         });
@@ -108,13 +81,13 @@ const HomePage = () => {
       SOCKET_EVENT.LOCAL_INSERT,
       ({ operation }: { operation: { node: Node } }) => {
         const prevIndex = crdtRef.current.remoteInsert(operation);
-
+        console.log(prevIndex, operation.node);
         if (!blockRef.current) return;
 
         blockRef.current.innerText = crdtRef.current.read();
 
         if (prevIndex == null || offsetRef.current === null) return;
-        updateCaretPosition(Number(prevIndex < offsetRef.current));
+        updateCaretPosition();
       },
     );
 
@@ -129,12 +102,14 @@ const HomePage = () => {
         };
       }) => {
         const targetIndex = crdtRef.current.remoteDelete(operation);
+        console.log(targetIndex, operation.targetId, operation.clock);
+
         if (!blockRef.current) return;
 
         blockRef.current.innerText = crdtRef.current.read();
 
-        if (targetIndex === null || offsetRef.current === null) return;
-        updateCaretPosition(-Number(targetIndex <= offsetRef.current));
+        if (targetIndex == null || offsetRef.current === null) return;
+        updateCaretPosition();
       },
     );
 
@@ -150,11 +125,11 @@ const HomePage = () => {
   return (
     <BaseLayout>
       <Container>
+        <div>Only Use English</div>
         <Block
           contentEditable
           ref={blockRef}
           onInput={handleInput}
-          onKeyDown={onArrowKeyDown}
           {...offsetHandlers}
         />
       </Container>
