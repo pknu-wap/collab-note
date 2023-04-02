@@ -12,13 +12,11 @@ import { mediaQuery } from '~/lib/styles';
 import crdtSocket from '~/sockets/crdtSocket';
 
 const CRDTPage = () => {
-  const crdtRef = useRef<CRDT>(
-    new CRDT(Math.floor(Math.random() * 1000) + 1, new LinkedList()),
-  );
+  const clientId = useRef<number>(Math.floor(Math.random() * 1000) + 1);
+  const crdtRef = useRef<CRDT>(new CRDT(clientId.current, new LinkedList()));
   const blockRef = useRef<HTMLParagraphElement>(null);
   const [offset, setOffset] = useState<number>(-1);
 
-  // 커서의 위치 변경
   const updateCaretPosition = useCallback(
     (updateOffset: number) => {
       if (!blockRef.current) return;
@@ -35,8 +33,6 @@ const CRDTPage = () => {
       blockRef.current.focus();
 
       setOffset(offset + updateOffset);
-
-      console.log('offset: ', offset);
     },
     [offset],
   );
@@ -46,33 +42,27 @@ const CRDTPage = () => {
 
     const selection = window.getSelection();
 
-    if (selection?.rangeCount) {
-      const range = selection.getRangeAt(0);
+    if (!selection?.rangeCount) return;
+    const range = selection.getRangeAt(0);
 
-      const preCaretRange = range.cloneRange();
-      preCaretRange.selectNodeContents(
-        blockRef.current as HTMLParagraphElement,
-      );
-      preCaretRange.setEnd(range.endContainer, range.endOffset);
-      const maxOffset = preCaretRange.toString().length;
+    const preCaretRange = range.cloneRange();
+    preCaretRange.selectNodeContents(blockRef.current as HTMLParagraphElement);
+    preCaretRange.setEnd(range.endContainer, range.endOffset);
+    const maxOffset = preCaretRange.toString().length;
 
-      const nextOffset = range.startOffset + offset;
+    const nextOffset = range.startOffset + offset;
 
-      setOffset(Math.min(maxOffset, Math.max(0, nextOffset)));
-    }
+    setOffset(Math.min(maxOffset, Math.max(0, nextOffset)));
   };
 
-  // TODO: 일단 간단하게 구현해보기
   const handleKeydown = (e: React.FormEvent<HTMLParagraphElement>) => {
     const event = e.nativeEvent as KeyboardEvent;
     switch (event.key) {
       case 'ArrowLeft':
-        // offset이 -1보다 작으면 안됨
         if (offset < 0) return;
         setOffset(offset - 1);
         break;
       case 'ArrowRight':
-        // offset이 글자 수보다 크면 안됨
         if (offset > crdtRef.current.read().length - 2) return;
         setOffset(offset + 1);
         break;
@@ -81,35 +71,25 @@ const CRDTPage = () => {
 
   const handleInput = (e: React.FormEvent<HTMLParagraphElement>) => {
     const event = e.nativeEvent as InputEvent;
-    const value = event.data as string; // null 제거
+    const value = event.data as string;
 
-    // 한글 입력 중일 때는 무시
-    if (event.isComposing) return console.log('한글 입력 중');
+    if (event.isComposing) return;
 
-    // event.inputType에는 insertText, deleteContentBackward, insertFromPaste, formatBold 등이 있다.
     switch (event.inputType) {
       case 'insertText': {
-        console.log('[insert]');
-
         setOffset(offset + 1);
         const remoteInsertion = crdtRef.current.localInsert(offset, value);
         crdtSocket.socket?.emit(SOCKET_EVENT.REMOTE_INSERT, {
-          // id는 block id
-          id: -1,
           operation: remoteInsertion,
         });
 
         break;
       }
       case 'deleteContentBackward': {
-        console.log('[delete]');
         setOffset(offset - 1);
         const remoteDeletion = crdtRef.current.localDelete(offset);
-        console.log(remoteDeletion);
 
         crdtSocket.socket?.emit(SOCKET_EVENT.REMOTE_DELETE, {
-          // id는 block id
-          id: -1,
           operation: remoteDeletion,
         });
 
@@ -117,8 +97,6 @@ const CRDTPage = () => {
       }
     }
   };
-
-  // [REMOTE]
 
   useEffect(() => {
     crdtSocket.initCrdtSocket();
@@ -139,58 +117,42 @@ const CRDTPage = () => {
 
     crdtSocket.socket?.on(
       SOCKET_EVENT.LOCAL_INSERT,
-      ({ id, operation }: { id: number; operation: { node: Node } }) => {
-        // id는 block id
-
+      ({ operation }: { operation: { node: Node } }) => {
         const prevIndex = crdtRef.current.remoteInsert(operation);
 
-        if (!blockRef.current)
-          return console.log('blockRef.current가 없습니다.');
+        if (!blockRef.current) return;
 
         blockRef.current.innerText = crdtRef.current.read();
         if (prevIndex == null) return;
-        console.log('prevIndex: ', prevIndex, 'offset: ', offset);
-        if (prevIndex < offset) {
-          updateCaretPosition(1);
-        }
+        if (prevIndex < offset) updateCaretPosition(1);
       },
     );
 
     crdtSocket.socket?.on(
       SOCKET_EVENT.LOCAL_DELETE,
       ({
-        id,
         operation,
       }: {
-        id: string;
         operation: {
           targetId: Identifier | null;
           clock: number;
         };
       }) => {
-        // id는 block id
-
         const targetIndex = crdtRef.current.remoteDelete(operation);
-        if (!blockRef.current)
-          return console.log('blockRef.current가 없습니다.');
+        if (!blockRef.current) return;
 
         blockRef.current.innerText = crdtRef.current.read();
         if (targetIndex == null) return;
-        if (targetIndex <= offset) {
-          console.log('targetIndex: ', targetIndex, 'offset: ', offset);
-          updateCaretPosition(-1);
-        }
+        if (targetIndex <= offset) updateCaretPosition(-1);
       },
     );
 
     return () => {
-      [
-        SOCKET_EVENT.LOCAL_INSERT,
-        SOCKET_EVENT.LOCAL_DELETE,
-        SOCKET_EVENT.LOCAL_UPDATE,
-      ].forEach((event) => {
-        crdtSocket.socket?.off(event);
-      });
+      [SOCKET_EVENT.LOCAL_INSERT, SOCKET_EVENT.LOCAL_DELETE].forEach(
+        (event) => {
+          crdtSocket.socket?.off(event);
+        },
+      );
     };
   }, [offset, updateCaretPosition]);
 
@@ -199,7 +161,6 @@ const CRDTPage = () => {
       <Container>
         <div>CRDT TEST PAGE</div>
         <div>offset: {offset}</div>
-        {/* contentEditable은 다른 tag를 input, textarea로 만들어 준다. */}
         <Block
           contentEditable
           ref={blockRef}
