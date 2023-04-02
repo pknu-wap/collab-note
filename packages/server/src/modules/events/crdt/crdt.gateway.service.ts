@@ -32,6 +32,7 @@ export class CrdtGatewayService {
     try {
       this.crdt.remoteInsert(operation);
       client.broadcast.emit(SOCKET_EVENT.LOCAL_INSERT, { operation });
+      console.log('remote insert', this.crdt);
     } catch (error) {
       //TODO: 이전 상태로 돌리기
       this.logger.error(error);

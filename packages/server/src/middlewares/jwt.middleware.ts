@@ -34,9 +34,9 @@ export class JwtMiddleware implements NestMiddleware {
         userId: decoded.userId,
         username: decoded.username,
       };
-    } catch (error) {
+    } catch (e) {
       clearTokenCookie(res);
-      console.log(error);
+      console.error(e);
     }
 
     return next();

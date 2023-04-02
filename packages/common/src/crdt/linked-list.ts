@@ -56,8 +56,17 @@ export class LinkedList {
         node.prev = null;
         this.head = id;
 
+        console.log(
+          '[clock]',
+          node.id.clock,
+          '[value]',
+          node.value,
+          '[index]',
+          index,
+        );
         return { node };
       }
+      console.log(this.nodeMap);
 
       const prevNode = this.findByIndex(index);
 
@@ -66,9 +75,20 @@ export class LinkedList {
 
       node.prev = prevNode.id;
 
+      console.log(
+        '[clock]',
+        node.id.clock,
+        '[value]',
+        node.value,
+        '[index]',
+        index,
+        '[nodemap]',
+        this.nodeMap,
+      );
+
       return { node };
     } catch (e) {
-      console.error(e);
+      console.error('insertByIndex error\n', e);
     }
   }
 
@@ -163,7 +183,7 @@ export class LinkedList {
 
       return targetNode.id;
     } catch (e) {
-      console.error(e);
+      console.error('deleteByIndex error\n', e);
     }
   }
 
@@ -188,8 +208,8 @@ export class LinkedList {
 
       return targetIndex;
     } catch (error) {
-      // ??
       console.error(error);
+      throw error;
     }
   }
 
@@ -210,6 +230,8 @@ export class LinkedList {
   private findByIndex(index: number): Node {
     let count = 0;
     let currentNode: Node | null = this.getHeadNode();
+
+    console.log(currentNode);
 
     while (count < index && currentNode) {
       currentNode = this.getNode(currentNode.next);
