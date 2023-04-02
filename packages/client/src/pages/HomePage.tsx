@@ -1,11 +1,166 @@
+import styled from '@emotion/styled';
+import { useEffect, useRef } from 'react';
 import BaseLayout from '~/components/layouts/BaseLayout';
+import {
+  SOCKET_EVENT,
+  CRDT,
+  Identifier,
+  LinkedList,
+  Node,
+} from '@collab-note/common';
+import { mediaQuery } from '~/lib/styles';
+import crdtSocket from '~/sockets/crdtSocket';
+import useOffset from '~/hooks/useOffset';
 
 const HomePage = () => {
+  const clientId = useRef<number>(Math.floor(Math.random() * 1000) + 1);
+
+  const crdtRef = useRef<CRDT>(new CRDT(clientId.current, new LinkedList()));
+  const blockRef = useRef<HTMLParagraphElement>(null);
+
+  const { offsetHandlers, offsetRef, setOffset } = useOffset(blockRef);
+
+  const updateCaretPosition = () => {
+    setOffset();
+  };
+
+  const handleInput = (e: React.FormEvent<HTMLParagraphElement>) => {
+    setOffset();
+
+    const event = e.nativeEvent as InputEvent;
+    const value = event.data as string;
+
+    if (event.isComposing) return;
+    if (offsetRef.current === null) return;
+
+    switch (event.inputType) {
+      case 'insertText': {
+        const remoteInsertion = crdtRef.current.localInsert(
+          offsetRef.current - 2,
+          value,
+        );
+
+        crdtSocket.socket?.emit(SOCKET_EVENT.REMOTE_INSERT, {
+          operation: remoteInsertion,
+        });
+
+        break;
+      }
+      case 'deleteContentBackward': {
+        const remoteDeletion = crdtRef.current.localDelete(offsetRef.current);
+
+        crdtSocket.socket?.emit(SOCKET_EVENT.REMOTE_DELETE, {
+          operation: remoteDeletion,
+        });
+
+        break;
+      }
+    }
+  };
+
+  useEffect(() => {
+    crdtSocket.initCrdtSocket();
+
+    crdtSocket.socket?.on(
+      SOCKET_EVENT.CRDT_INIT,
+      ({ data }: { data: LinkedList }) => {
+        crdtRef.current = new CRDT(
+          Math.floor(Math.random() * 100) + 1,
+          new LinkedList(data),
+        );
+
+        if (!blockRef.current) return;
+
+        blockRef.current.innerText = crdtRef.current.read();
+
+        updateCaretPosition();
+      },
+    );
+
+    crdtSocket.socket?.on(
+      SOCKET_EVENT.LOCAL_INSERT,
+      ({ operation }: { operation: { node: Node } }) => {
+        const prevIndex = crdtRef.current.remoteInsert(operation);
+        console.log(prevIndex, operation.node);
+        if (!blockRef.current) return;
+
+        blockRef.current.innerText = crdtRef.current.read();
+
+        if (prevIndex == null || offsetRef.current === null) return;
+        updateCaretPosition();
+      },
+    );
+
+    crdtSocket.socket?.on(
+      SOCKET_EVENT.LOCAL_DELETE,
+      ({
+        operation,
+      }: {
+        operation: {
+          targetId: Identifier | null;
+          clock: number;
+        };
+      }) => {
+        const targetIndex = crdtRef.current.remoteDelete(operation);
+        console.log(targetIndex, operation.targetId, operation.clock);
+
+        if (!blockRef.current) return;
+
+        blockRef.current.innerText = crdtRef.current.read();
+
+        if (targetIndex == null || offsetRef.current === null) return;
+        updateCaretPosition();
+      },
+    );
+
+    return () => {
+      [SOCKET_EVENT.LOCAL_INSERT, SOCKET_EVENT.LOCAL_DELETE].forEach(
+        (event) => {
+          crdtSocket.socket?.off(event);
+        },
+      );
+    };
+  }, []);
+
   return (
     <BaseLayout>
-      <div>Home</div>
+      <Container>
+        <div>Only Use English</div>
+        <Block
+          contentEditable
+          ref={blockRef}
+          onInput={handleInput}
+          {...offsetHandlers}
+        />
+      </Container>
     </BaseLayout>
   );
 };
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 2rem;
+  margin: 0 auto;
+  margin-top: 2rem;
+  background-color: rgba(0, 0, 0, 0.05);
+  ${mediaQuery.mobile} {
+    width: 600px;
+  }
+  gap: 1rem;
+`;
+
+const Block = styled.p`
+  width: 100%;
+  margin-top: 1rem;
+  line-height: 1.5;
+  outline: none;
+  border: solid 1px gray;
+  padding: 1rem;
+  border-radius: 0.5rem;
+`;
 
 export default HomePage;

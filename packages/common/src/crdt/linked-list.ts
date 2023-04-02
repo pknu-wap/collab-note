@@ -10,95 +10,50 @@ export class LinkedList {
   nodeMap: NodeMap;
 
   constructor(initialStructure?: LinkedList) {
-    if (!initialStructure) {
-      this.head = null;
-      this.nodeMap = {};
+    this.head = null;
+    this.nodeMap = {};
 
-      return this;
-    }
+    if (initialStructure) {
+      const { head, nodeMap } = initialStructure;
 
-    const { head, nodeMap } = initialStructure;
+      this.head = head ?? null;
 
-    this.head = head ?? null;
-
-    if (!nodeMap && !Object.keys(nodeMap).length) {
-      this.nodeMap = nodeMap ?? {};
-      return this;
-    }
-
-    // nodeMap의 prototype을 Node.prototype으로 설정
-    // 이렇게 하지 않으면, nodeMap의 prototype이 Object.prototype이 되어서
-    // nodeMap의 메서드를 사용할 수 없음.
-    // example: nodeMap[id].next
-    // nodeMap[id]는 Node의 인스턴스이지만, nodeMap[id].next는 undefined가 됨.
-    // 이를 방지하기 위해 prototype을 Node.prototype으로 설정해줌.
-    // 이렇게 하면, nodeMap[id].next를 사용할 수 있음.
-    const nodeMapWithPrototype = Object.entries(nodeMap).reduce<NodeMap>(
-      (prev, [id, node]) => {
+      Object.entries(nodeMap).forEach(([id, node]) => {
         Object.setPrototypeOf(node, Node.prototype);
-        prev[id] = node;
-
-        return prev;
-      },
-      {},
-    );
-
-    this.nodeMap = nodeMapWithPrototype;
+        this.nodeMap[id] = node;
+      });
+    }
   }
 
   insertByIndex(id: Identifier, index: number, value: string) {
-    try {
-      const node = new Node(id, value);
-      this.setNode(id, node);
+    const node = new Node(id, value);
+    this.setNode(id, node);
 
-      if (!this.head || index === -1) {
-        node.next = this.head;
-        node.prev = null;
-        this.head = id;
-
-        console.log(
-          '[clock]',
-          node.id.clock,
-          '[value]',
-          node.value,
-          '[index]',
-          index,
-        );
-        return { node };
-      }
-
-      const prevNode = this.findByIndex(index);
-
-      node.next = prevNode.next;
-      prevNode.next = node.id;
-
-      node.prev = prevNode.id;
-
-      console.log(
-        '[clock]',
-        node.id.clock,
-        '[value]',
-        node.value,
-        '[index]',
-        index,
-        '[nodemap]',
-        this.nodeMap,
-      );
+    if (!this.head || index === -1) {
+      node.next = this.head;
+      node.prev = null;
+      this.head = id;
 
       return { node };
-    } catch (e) {
-      console.error('insertByIndex error\n', e);
     }
+
+    const prevNode = this.findByIndex(index);
+
+    // insert node between prevNode and nextNode
+    node.next = prevNode.next;
+    prevNode.next = node.id;
+    node.prev = prevNode.id;
+
+    return { node };
   }
 
   insertById(node: Node) {
-    // remote operation
-
     try {
       Object.setPrototypeOf(node, Node.prototype);
       this.setNode(node.id, node);
 
-      let prevNode: Node | null, prevIndex: number;
+      let prevNode: Node | null;
+      let prevIndex: number;
 
       // node.prev가 존재하지 않으면, head를 찾아서 prevNode에 할당
       if (!node.prev) {
@@ -133,10 +88,9 @@ export class LinkedList {
         if (!prevNode) return null;
       }
 
-      // prevNode.next가 존재하면, prevNode.next를 찾아서 nextNode에 할당
+      // insert node between prevNode and nextNode
       node.next = prevNode.next;
       prevNode.next = node.id;
-
       node.prev = prevNode.id;
 
       return prevIndex + 1;
@@ -150,14 +104,12 @@ export class LinkedList {
       // head deleted
       if (index === 0) {
         const head = this.getHeadNode();
-
-        if (!head) throw new Error('head가 없는데 어떻게 삭제하셨나요 ^^');
+        if (!head) throw new Error('head not found');
 
         const nextNode = this.getNode(head.next);
 
         if (!nextNode) {
           this.head = null;
-
           return null;
         }
 
@@ -171,11 +123,11 @@ export class LinkedList {
 
       const prevNode = this.findByIndex(index - 1);
 
-      if (!prevNode.next) throw new Error();
+      if (!prevNode.next) throw new Error(`node with index ${index} not found`);
 
       const targetNode = this.getNode(prevNode.next);
 
-      if (!targetNode) throw new Error();
+      if (!targetNode) throw new Error(`node with index ${index} not found`);
 
       this.deleteNode(targetNode.id);
       prevNode.next = targetNode.next;
@@ -188,17 +140,16 @@ export class LinkedList {
 
   deleteById(id: Identifier | null) {
     try {
-      // head를 삭제하는 경우
-      // head가 존재하지 않으면, 에러 발생
+      // head deleted
       if (!id) {
         const head = this.getHeadNode();
-        if (!head) throw new Error('head not found');
+        if (!head) throw new Error(`head not found`);
         this.head = head.next;
         return null;
       }
 
       const { node: targetNode, index: targetIndex } = this.findById(id);
-      if (!targetNode) throw new Error('node not found');
+      if (!targetNode) throw new Error(`node with id ${id} not found`);
       const prevNode = this.findByIndex(targetIndex - 1);
 
       prevNode.next = targetNode.next;
@@ -207,8 +158,8 @@ export class LinkedList {
 
       return targetIndex;
     } catch (error) {
-      // ??
       console.error(error);
+      throw error;
     }
   }
 
@@ -248,12 +199,11 @@ export class LinkedList {
       if (JSON.stringify(currentNode.id) === JSON.stringify(id)) {
         return { node: currentNode, index: count };
       }
-
       currentNode = this.getNode(currentNode.next);
       count++;
     }
 
-    throw new Error('node not found');
+    throw new Error(`node with id ${id} not found`);
   }
 
   private getHeadNode() {

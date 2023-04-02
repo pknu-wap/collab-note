@@ -8,7 +8,7 @@ import {
 import { Server, Socket } from 'socket.io';
 import { SOCKET_EVENT } from '@collab-note/common';
 import { CrdtGatewayService } from './crdt.gateway.service';
-import { RemoteDeleteDto, RemoteInsertDto, RemoteUpdateDto } from './dto';
+import { RemoteDeleteDto, RemoteInsertDto } from './dto';
 
 @WebSocketGateway({
   cors: { origin: '*' },
@@ -40,10 +40,5 @@ export class CrdtGateway
   @SubscribeMessage(SOCKET_EVENT.REMOTE_DELETE)
   handleRemoteDelete(client: Socket, dto: RemoteDeleteDto) {
     this.crdtGatewayService.onRemoteDelete(client, dto);
-  }
-
-  @SubscribeMessage(SOCKET_EVENT.REMOTE_UPDATE)
-  handleRemoteUpdate(client: Socket, dto: RemoteUpdateDto) {
-    this.crdtGatewayService.onRemoteUpdate(client, dto);
   }
 }

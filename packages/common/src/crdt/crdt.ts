@@ -14,7 +14,7 @@ export class CRDT {
 
     const { nodeMap } = initialStructure;
 
-    if (!nodeMap || !Object.keys(nodeMap).length) {
+    if (!nodeMap) {
       this.clock = 1;
       return this;
     }
@@ -25,7 +25,6 @@ export class CRDT {
       .reduce((prev, cur) => Math.max(prev, cur), 0);
 
     this.clock = maxClock + 1;
-    console.log('clock', this.clock);
   }
 
   get data() {
@@ -35,15 +34,16 @@ export class CRDT {
   localInsert(index: number, value: string) {
     const id = new Identifier(this.clock++, this.client);
 
-    const remoteInsertion = this.structure.insertByIndex(id, index, value);
+    console.log(id, index, value);
 
+    const remoteInsertion = this.structure.insertByIndex(id, index, value);
     return remoteInsertion;
   }
 
   remoteInsert({ node }: { node: Node }) {
     const prevIndex = this.structure.insertById(node);
 
-    // clock이 같은 경우, clock을 증가시킴.
+    // clock이 같은 경우, clock을 증가시킴. (동기화를 위함)
     if (++this.clock < node.id.clock) {
       this.clock = node.id.clock + 1;
     }
@@ -67,8 +67,7 @@ export class CRDT {
   }) {
     const targetIndex = this.structure.deleteById(targetId);
 
-    // clock이 같은 경우, clock을 증가시킴.
-    // localDelete()에서 clock을 증가시키지 않았기 때문에, 여기서 clock을 증가시켜야 함.
+    // clock이 같은 경우, clock을 증가시킴. (동기화를 위함)
     if (++this.clock < clock) {
       this.clock = clock + 1;
     }

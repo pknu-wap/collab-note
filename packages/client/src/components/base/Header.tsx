@@ -12,9 +12,6 @@ const Header = () => {
       <div>
         <Link to={`${PAGE_LIST.NOTE}/1`}>NOTE 1</Link>
       </div>
-      <div>
-        <Link to={PAGE_LIST.CRDT}>CRDT</Link>
-      </div>
     </Container>
   );
 };
