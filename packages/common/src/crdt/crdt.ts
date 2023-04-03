@@ -1,5 +1,9 @@
 import { Identifier } from './identifier';
-import { LinkedList } from './linked-list';
+import {
+  LinkedList,
+  type RemoteDeleteOperation,
+  type RemoteInsertOperation,
+} from './linked-list';
 import { Node } from './node';
 
 export class CRDT {
@@ -31,7 +35,7 @@ export class CRDT {
     return this.structure;
   }
 
-  localInsert(index: number, value: string) {
+  localInsert(index: number, value: string): RemoteInsertOperation {
     const id = new Identifier(this.clock++, this.client);
 
     console.log(id, index, value);
@@ -40,7 +44,7 @@ export class CRDT {
     return remoteInsertion;
   }
 
-  remoteInsert({ node }: { node: Node }) {
+  remoteInsert({ node }: RemoteInsertOperation) {
     const prevIndex = this.structure.insertById(node);
 
     // clock이 같은 경우, clock을 증가시킴. (동기화를 위함)
@@ -51,20 +55,14 @@ export class CRDT {
     return prevIndex;
   }
 
-  localDelete(index: number) {
+  localDelete(index: number): RemoteDeleteOperation {
     const targetId = this.structure.deleteByIndex(index);
 
     // 여기 clock을 증가시키지 않는 이유는, remoteDelete()에서 clock을 증가시키기 때문.
     return { targetId, clock: this.clock };
   }
 
-  remoteDelete({
-    targetId,
-    clock,
-  }: {
-    targetId: Identifier | null;
-    clock: number;
-  }) {
+  remoteDelete({ targetId, clock }: RemoteDeleteOperation) {
     const targetIndex = this.structure.deleteById(targetId);
 
     // clock이 같은 경우, clock을 증가시킴. (동기화를 위함)

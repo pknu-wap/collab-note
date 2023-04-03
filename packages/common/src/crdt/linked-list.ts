@@ -5,6 +5,15 @@ export interface NodeMap {
   [index: string]: Node;
 }
 
+export interface RemoteInsertOperation {
+  node: Node;
+}
+
+export interface RemoteDeleteOperation {
+  targetId: Identifier | null;
+  clock: number;
+}
+
 export class LinkedList {
   head: Identifier | null;
   nodeMap: NodeMap;
@@ -25,7 +34,11 @@ export class LinkedList {
     }
   }
 
-  insertByIndex(id: Identifier, index: number, value: string) {
+  insertByIndex(
+    id: Identifier,
+    index: number,
+    value: string,
+  ): RemoteInsertOperation {
     const node = new Node(id, value);
     this.setNode(id, node);
 
@@ -47,7 +60,7 @@ export class LinkedList {
     return { node };
   }
 
-  insertById(node: Node) {
+  insertById(node: Node): number | null {
     try {
       Object.setPrototypeOf(node, Node.prototype);
       this.setNode(node.id, node);
@@ -95,11 +108,12 @@ export class LinkedList {
 
       return prevIndex + 1;
     } catch (e) {
-      console.log(e);
+      console.error(e);
+      return null;
     }
   }
 
-  deleteByIndex(index: number) {
+  deleteByIndex(index: number): Identifier | null {
     try {
       // head deleted
       if (index === 0) {
@@ -135,10 +149,11 @@ export class LinkedList {
       return targetNode.id;
     } catch (e) {
       console.error('deleteByIndex error\n', e);
+      return null;
     }
   }
 
-  deleteById(id: Identifier | null) {
+  deleteById(id: Identifier | null): number | null {
     try {
       // head deleted
       if (!id) {
