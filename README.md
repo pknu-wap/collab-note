@@ -1,5 +1,8 @@
 # 📝 CollabNote
 
+<div align="center"><img src="https://user-images.githubusercontent.com/75781414/229709131-42024f0d-70ca-4930-895e-ba411a2fab96.png" width="220" height="240">
+</div>
+
 ## `프로젝트 이름`
 
 📝 Collab Note
