@@ -4,9 +4,9 @@ import BaseLayout from '~/components/layouts/BaseLayout';
 import {
   SOCKET_EVENT,
   CRDT,
-  Identifier,
   LinkedList,
-  Node,
+  type RemoteDeleteOperation,
+  type RemoteInsertOperation,
 } from '@collab-note/common';
 import { mediaQuery } from '~/lib/styles';
 import crdtSocket from '~/sockets/crdtSocket';
@@ -34,13 +34,11 @@ const HomePage = () => {
 
     if (!blockRef.current) return;
 
-    // 우선 블럭의 첫번째 text node로 고정, text node가 없는 경우 clearOffset()
     if (!blockRef.current.firstChild) {
       clearOffset();
       return;
     }
 
-    // range start와 range end가 같은 경우만 가정
     range.setStart(
       blockRef.current.firstChild,
       offsetRef.current + updateOffset,
@@ -48,7 +46,6 @@ const HomePage = () => {
     range.collapse();
     selection.addRange(range);
 
-    // 변경된 offset 반영
     setOffset();
   };
 
@@ -60,6 +57,8 @@ const HomePage = () => {
 
     if (event.isComposing) return;
     if (offsetRef.current === null) return;
+
+    console.log('event.value', value);
 
     switch (event.inputType) {
       case 'insertText': {
@@ -86,6 +85,24 @@ const HomePage = () => {
     }
   };
 
+  const onCompositionEnd: React.CompositionEventHandler = (e) => {
+    if (!offsetRef.current) return;
+
+    const event = e.nativeEvent as CompositionEvent;
+
+    const letters = Array.from(event.data);
+    const maxIndex = letters.length - 1;
+
+    letters.forEach((letter, idx) => {
+      const pos = offsetRef.current - 2 - (maxIndex - idx);
+      const remoteInsertion = crdtRef.current.localInsert(pos, letter);
+
+      crdtSocket.socket?.emit(SOCKET_EVENT.REMOTE_INSERT, {
+        operation: remoteInsertion,
+      });
+    });
+  };
+
   useEffect(() => {
     crdtSocket.initCrdtSocket();
 
@@ -107,7 +124,7 @@ const HomePage = () => {
 
     crdtSocket.socket?.on(
       SOCKET_EVENT.LOCAL_INSERT,
-      ({ operation }: { operation: { node: Node } }) => {
+      ({ operation }: { operation: RemoteInsertOperation }) => {
         const prevIndex = crdtRef.current.remoteInsert(operation);
         console.log(prevIndex, operation.node);
         if (!blockRef.current) return;
@@ -121,14 +138,7 @@ const HomePage = () => {
 
     crdtSocket.socket?.on(
       SOCKET_EVENT.LOCAL_DELETE,
-      ({
-        operation,
-      }: {
-        operation: {
-          targetId: Identifier | null;
-          clock: number;
-        };
-      }) => {
+      ({ operation }: { operation: RemoteDeleteOperation }) => {
         const targetIndex = crdtRef.current.remoteDelete(operation);
         console.log(targetIndex, operation.targetId, operation.clock);
 
@@ -153,11 +163,11 @@ const HomePage = () => {
   return (
     <BaseLayout>
       <Container>
-        <div>Only Use English</div>
         <Block
           contentEditable
           ref={blockRef}
           onInput={handleInput}
+          onCompositionEnd={onCompositionEnd}
           {...offsetHandlers}
         />
       </Container>

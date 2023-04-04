@@ -1,7 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
-import { SOCKET_EVENT } from '@collab-note/common';
-import { RemoteDeleteDto, RemoteInsertDto } from './dto';
+import {
+  RemoteDeleteOperation,
+  RemoteInsertOperation,
+  SOCKET_EVENT,
+} from '@collab-note/common';
 import { CRDT, LinkedList } from '@collab-note/common';
 
 @Injectable()
@@ -28,7 +31,10 @@ export class CrdtGatewayService {
     this.logger.log(`Client disconnected: ${client.id}`);
   }
 
-  async onRemoteInsert(client: Socket, { operation }: RemoteInsertDto) {
+  async onRemoteInsert(
+    client: Socket,
+    { operation }: { operation: RemoteInsertOperation },
+  ) {
     try {
       this.crdt.remoteInsert(operation);
       client.broadcast.emit(SOCKET_EVENT.LOCAL_INSERT, { operation });
@@ -38,7 +44,10 @@ export class CrdtGatewayService {
     }
   }
 
-  onRemoteDelete(client: Socket, { operation }: RemoteDeleteDto) {
+  onRemoteDelete(
+    client: Socket,
+    { operation }: { operation: RemoteDeleteOperation },
+  ) {
     try {
       this.crdt.remoteDelete(operation);
       client.broadcast.emit(SOCKET_EVENT.LOCAL_DELETE, { operation });

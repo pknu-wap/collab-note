@@ -1,4 +1,6 @@
 import {
+  ConnectedSocket,
+  MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
   OnGatewayInit,
@@ -6,9 +8,12 @@ import {
   WebSocketGateway,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { SOCKET_EVENT } from '@collab-note/common';
+import {
+  RemoteDeleteOperation,
+  RemoteInsertOperation,
+  SOCKET_EVENT,
+} from '@collab-note/common';
 import { CrdtGatewayService } from './crdt.gateway.service';
-import { RemoteDeleteDto, RemoteInsertDto } from './dto';
 
 @WebSocketGateway({
   cors: { origin: '*' },
@@ -33,12 +38,18 @@ export class CrdtGateway
   }
 
   @SubscribeMessage(SOCKET_EVENT.REMOTE_INSERT)
-  handleRemoteInsert(client: Socket, dto: RemoteInsertDto) {
-    this.crdtGatewayService.onRemoteInsert(client, dto);
+  handleRemoteInsert(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() data: { operation: RemoteInsertOperation },
+  ) {
+    this.crdtGatewayService.onRemoteInsert(client, data);
   }
 
   @SubscribeMessage(SOCKET_EVENT.REMOTE_DELETE)
-  handleRemoteDelete(client: Socket, dto: RemoteDeleteDto) {
-    this.crdtGatewayService.onRemoteDelete(client, dto);
+  handleRemoteDelete(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() data: { operation: RemoteDeleteOperation },
+  ) {
+    this.crdtGatewayService.onRemoteDelete(client, data);
   }
 }
