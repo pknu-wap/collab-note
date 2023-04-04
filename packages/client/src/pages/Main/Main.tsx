@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import { useEffect, useRef } from 'react';
 import BaseLayout from '~/components/layouts/BaseLayout';
 import {
@@ -8,11 +7,11 @@ import {
   type RemoteDeleteOperation,
   type RemoteInsertOperation,
 } from '@collab-note/common';
-import { mediaQuery } from '~/lib/styles';
 import crdtSocket from '~/sockets/crdtSocket';
 import useOffset from '~/hooks/useOffset';
+import * as S from './Main.styles';
 
-const HomePage = () => {
+const Main = () => {
   const clientId = useRef<number>(Math.floor(Math.random() * 1000) + 1);
 
   const crdtRef = useRef<CRDT>(new CRDT(clientId.current, new LinkedList()));
@@ -162,43 +161,17 @@ const HomePage = () => {
 
   return (
     <BaseLayout>
-      <Container>
-        <Block
+      <S.Container>
+        <S.Block
           contentEditable
           ref={blockRef}
           onInput={handleInput}
           onCompositionEnd={onCompositionEnd}
           {...offsetHandlers}
         />
-      </Container>
+      </S.Container>
     </BaseLayout>
   );
 };
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  padding: 2rem;
-  margin: 0 auto;
-  margin-top: 2rem;
-  background-color: rgba(0, 0, 0, 0.05);
-  ${mediaQuery.mobile} {
-    width: 600px;
-  }
-  gap: 1rem;
-`;
-
-const Block = styled.p`
-  width: 100%;
-  margin-top: 1rem;
-  line-height: 1.5;
-  outline: none;
-  border: solid 1px gray;
-  padding: 1rem;
-  border-radius: 0.5rem;
-`;
-
-export default HomePage;
+export default Main;

@@ -4,9 +4,10 @@ export const BASE_URL: string =
 export const API_URL = {} as const;
 
 export const PAGE_LIST = {
-  HOME: '/',
-  NOTE: '/note',
-  CRDT: '/crdt',
+  MAIN: '/',
+  MY_PAGE: '/my-page',
+  NOTE: (noteId: string) => `/note/${noteId}`,
+  SETTING: '/setting',
 } as const;
 
 export const SOCKET_URL = {
