@@ -4,7 +4,6 @@ import {
   type RemoteDeleteOperation,
   type RemoteInsertOperation,
 } from './linked-list';
-import { Node } from './node';
 
 export class CRDT {
   private clock: number;

@@ -4,9 +4,7 @@ import BaseLayout from '~/components/layouts/BaseLayout';
 import {
   SOCKET_EVENT,
   CRDT,
-  Identifier,
   LinkedList,
-  Node,
   type RemoteDeleteOperation,
   type RemoteInsertOperation,
 } from '@collab-note/common';
@@ -87,6 +85,24 @@ const HomePage = () => {
     }
   };
 
+  const onCompositionEnd: React.CompositionEventHandler = (e) => {
+    if (!offsetRef.current) return;
+
+    const event = e.nativeEvent as CompositionEvent;
+
+    const letters = Array.from(event.data);
+    const maxIndex = letters.length - 1;
+
+    letters.forEach((letter, idx) => {
+      const pos = offsetRef.current - 2 - (maxIndex - idx);
+      const remoteInsertion = crdtRef.current.localInsert(pos, letter);
+
+      crdtSocket.socket?.emit(SOCKET_EVENT.REMOTE_INSERT, {
+        operation: remoteInsertion,
+      });
+    });
+  };
+
   useEffect(() => {
     crdtSocket.initCrdtSocket();
 
@@ -147,11 +163,11 @@ const HomePage = () => {
   return (
     <BaseLayout>
       <Container>
-        <div>Only Use English</div>
         <Block
           contentEditable
           ref={blockRef}
           onInput={handleInput}
+          onCompositionEnd={onCompositionEnd}
           {...offsetHandlers}
         />
       </Container>
