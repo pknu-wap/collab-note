@@ -7,8 +7,10 @@ const Header = () => {
   return (
     <Container>
       <div>
+        <Link to={PAGE_LIST.HOME}>Home</Link>
         <Link to={PAGE_LIST.MAIN}>Main</Link>
         <Link to={PAGE_LIST.NOTE('1')}>Note 1</Link>
+        <Link to={PAGE_LIST.NOTE_CREATE}>Create Note</Link>
         <Link to={PAGE_LIST.MY_PAGE}>My Page</Link>
         <Link to={PAGE_LIST.SETTING}>Setting</Link>
       </div>
