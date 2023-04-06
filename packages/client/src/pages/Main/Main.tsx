@@ -10,8 +10,6 @@ import {
 import crdtSocket from '~/sockets/crdtSocket';
 import useOffset from '~/hooks/useOffset';
 import * as S from './Main.styles';
-import NoteLeftScreen from '~/components/note/NoteLeftScreen';
-import NoteRightScreen from '~/components/note/NoteRightScreen';
 
 const Main = () => {
   const clientId = useRef<number>(Math.floor(Math.random() * 1000) + 1);
@@ -174,8 +172,6 @@ const Main = () => {
           />
         </S.Container>
       </BaseLayout>
-      <NoteLeftScreen />
-      <NoteRightScreen />
     </>
   );
 };

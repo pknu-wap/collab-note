@@ -1,6 +1,4 @@
 import styled from '@emotion/styled';
-import { Button } from '../common';
-import useDisclosure from '~/hooks/useDisclosure';
 
 const NoteRightScreen = () => {
   return <Container></Container>;
