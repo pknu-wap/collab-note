@@ -2,9 +2,8 @@
   "private": true,
   "name": "collab-note",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
-  "repository": "https://github.com/neko113/CollabNote",
+  "repository": "https://github.com/pknu-wap/collab-note",
   "author": "neko113 <alstn113@gmail.com>",
   "scripts": {
     "dev": "pnpm --parallel --stream -r dev",
@@ -16,7 +15,6 @@
     "prisma:push": "pnpm --filter server prisma:push",
     "prepare": "husky install"
   },
-  "keywords": [],
   "license": "MIT",
   "lint-staged": {
     "packages/client/**/*.{ts,tsx}": [
