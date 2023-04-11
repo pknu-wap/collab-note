@@ -26,6 +26,9 @@
     "packages/server/**/*.ts": [
       "prettier --write",
       "eslint --config ./packages/server/.eslintrc.js --fix"
+    ],
+    "packages/common/**/*.ts": [
+      "prettier --write"
     ]
   },
   "devDependencies": {
