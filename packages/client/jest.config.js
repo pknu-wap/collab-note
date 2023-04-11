@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-undef
 module.exports = {
   preset: 'ts-jest', // Use ts-jest for TypeScript
   testEnvironment: 'node', // Use node for testing environment (jsdom, node, etc.)

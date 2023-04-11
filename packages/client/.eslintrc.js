@@ -2,6 +2,7 @@ module.exports = {
   env: {
     browser: true,
     es2021: true,
+    jest: true,
   },
   // recommend는 eslint의 기본 규칙을 사용하겠다는 의미한다.
   extends: [
@@ -10,6 +11,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:react-hooks/recommended',
     'plugin:storybook/recommended',
+    'plugin:jest/recommended',
     'plugin:prettier/recommended',
   ],
   overrides: [],
