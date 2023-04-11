@@ -1,9 +1,9 @@
-name: cd
+name: Continuous Deployment (CD)
 
 on:
+  workflow_dispatch:
   push:
     branches: [dev]
-  workflow_dispatch:
 
 jobs:
   build:
