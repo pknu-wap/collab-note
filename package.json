@@ -13,7 +13,8 @@
     "prisma:generate": "pnpm --filter server prisma:generate",
     "prisma:studio": "pnpm --filter server prisma:studio",
     "prisma:push": "pnpm --filter server prisma:push",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "test": "pnpm --stream -r test"
   },
   "license": "MIT",
   "lint-staged": {

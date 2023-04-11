@@ -1,8 +1,6 @@
 {
   "name": "@collab-note/server",
-  "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "version": "0.0.0",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
@@ -13,7 +11,8 @@
     "start:pm2": "pnpm pm2 start ecosystem.config.js",
     "prisma:generate": "pnpm dlx prisma generate",
     "prisma:studio": "pnpm dlx prisma studio",
-    "prisma:push": "pnpm dlx prisma db push"
+    "prisma:push": "pnpm dlx prisma db push",
+    "test": "jest"
   },
   "dependencies": {
     "@collab-note/common": "workspace:*",
