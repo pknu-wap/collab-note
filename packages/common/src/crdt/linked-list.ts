@@ -124,6 +124,7 @@ export class LinkedList {
 
         if (!nextNode) {
           this.head = null;
+          // this.deleteNode(head.id);
           return null;
         }
 
@@ -160,6 +161,7 @@ export class LinkedList {
         const head = this.getHeadNode();
         if (!head) throw new Error(`head not found`);
         this.head = head.next;
+        // this.deleteNode(head.id);
         return null;
       }
 

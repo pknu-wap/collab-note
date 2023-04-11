@@ -2,9 +2,8 @@
   "private": true,
   "name": "collab-note",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
-  "repository": "https://github.com/neko113/CollabNote",
+  "repository": "https://github.com/pknu-wap/collab-note",
   "author": "neko113 <alstn113@gmail.com>",
   "scripts": {
     "dev": "pnpm --parallel --stream -r dev",
@@ -14,9 +13,9 @@
     "prisma:generate": "pnpm --filter server prisma:generate",
     "prisma:studio": "pnpm --filter server prisma:studio",
     "prisma:push": "pnpm --filter server prisma:push",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "test": "pnpm --stream -r test"
   },
-  "keywords": [],
   "license": "MIT",
   "lint-staged": {
     "packages/client/**/*.{ts,tsx}": [
@@ -26,6 +25,9 @@
     "packages/server/**/*.ts": [
       "prettier --write",
       "eslint --config ./packages/server/.eslintrc.js --fix"
+    ],
+    "packages/common/**/*.ts": [
+      "prettier --write"
     ]
   },
   "devDependencies": {
@@ -41,6 +43,7 @@
     "jest": "^29.4.3",
     "lint-staged": "^13.1.2",
     "prettier": "^2.8.4",
+    "ts-jest": "^29.1.0",
     "typescript": "^4.9.5"
   }
 }

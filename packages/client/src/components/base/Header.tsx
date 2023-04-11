@@ -7,10 +7,12 @@ const Header = () => {
   return (
     <Container>
       <div>
-        <Link to={PAGE_LIST.HOME}>HOME</Link>
-      </div>
-      <div>
-        <Link to={`${PAGE_LIST.NOTE}/1`}>NOTE 1</Link>
+        <Link to={PAGE_LIST.HOME}>Home</Link>
+        <Link to={PAGE_LIST.MAIN}>Main</Link>
+        <Link to={PAGE_LIST.NOTE('1')}>Note 1</Link>
+        <Link to={PAGE_LIST.NOTE_CREATE}>Create Note</Link>
+        <Link to={PAGE_LIST.MY_PAGE}>My Page</Link>
+        <Link to={PAGE_LIST.SETTING}>Setting</Link>
       </div>
     </Container>
   );
@@ -26,6 +28,8 @@ const Container = styled.header`
   padding: 0px 16px;
   background: #000;
   div {
+    display: flex;
+    gap: 1rem;
     a {
       color: #fff;
       text-decoration: none;
