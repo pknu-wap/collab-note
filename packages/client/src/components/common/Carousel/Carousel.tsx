@@ -35,12 +35,12 @@ export const Carousel = ({ children }: Props) => {
 
     const { scrollWidth, scrollLeft, clientWidth } = scrollPanelRef.current;
 
-    const isPrevButtonVisible = scrollLeft <= 0;
-    const isNextButtonVisible = scrollWidth - clientWidth <= scrollLeft; // clientWidth는 스크롤 패널의 너비
+    const prevButtonHidden = scrollLeft <= 0;
+    const nextButtonHidden = scrollWidth - clientWidth <= scrollLeft; // clientWidth는 스크롤 패널의 너비
 
     setButtonVisible({
-      prev: isPrevButtonVisible,
-      next: isNextButtonVisible,
+      prev: prevButtonHidden,
+      next: nextButtonHidden,
     });
   };
 
@@ -86,7 +86,7 @@ export const Carousel = ({ children }: Props) => {
       <S.SideButton
         className="prev"
         onClick={handleChangeScroll('prev')}
-        visible={buttonVisible.prev}
+        hidden={buttonVisible.prev}
       >
         <AngleLeft />
       </S.SideButton>
@@ -99,7 +99,7 @@ export const Carousel = ({ children }: Props) => {
       <S.SideButton
         className="next"
         onClick={handleChangeScroll('next')}
-        visible={buttonVisible.next}
+        hidden={buttonVisible.next}
       >
         <AngleRight />
       </S.SideButton>
