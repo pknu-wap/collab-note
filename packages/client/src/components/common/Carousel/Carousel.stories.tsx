@@ -17,4 +17,19 @@ export const Default: Story = {
   args: {
     children: 'Carousel',
   },
+  render: (args) => (
+    <Carousel {...args}>
+      {Array.from({ length: 30 }).map((_, idx) => (
+        <div
+          key={idx}
+          style={{
+            width: '300px',
+            height: '380px',
+            marginRight: '24px',
+            backgroundColor: '#f3f3f3',
+          }}
+        />
+      ))}{' '}
+    </Carousel>
+  ),
 };
