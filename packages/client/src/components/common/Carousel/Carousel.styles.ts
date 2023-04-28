@@ -1,18 +1,36 @@
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { hideScrollbar } from '~/lib/styles';
 
 export const Container = styled.div`
   position: relative;
   width: 100%;
+
+  &:hover {
+    button {
+      position: absolute;
+      top: 50%;
+      opacity: 1;
+      transform: translateY(-50%);
+      filter: blur(0px);
+    }
+  }
+
+  .next {
+    right: 1rem;
+  }
+  .previous {
+    left: 1rem;
+  }
 `;
 
 export const SideButton = styled.button<{ visible: boolean }>`
+  position: absolute;
+  top: 50%;
+
   cursor: pointer;
   user-select: none;
   pointer-events: all;
-
-  position: absolute;
-  top: 50%;
 
   display: flex;
   flex-direction: column;
@@ -21,25 +39,29 @@ export const SideButton = styled.button<{ visible: boolean }>`
 
   color: #fff;
   border: none;
-  font-size: 1.5rem;
+  font-size: 1rem;
 
   padding: 1rem;
 
-  border-radius: 50%;
+  border-radius: 1rem;
   background-color: rgba(0, 0, 0, 0.5);
   box-shadow: 0px 12px 48px rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(30px);
+  width: 50px;
+  height: 75px;
   filter: blur(1rem);
 
   transition: all 0.35s ease;
   opacity: 0;
   z-index: 5;
-`;
 
-export const ListContent = styled.div`
-  position: relative;
-  display: flex;
-  flex-direction: row;
+  ${({ visible }) =>
+    visible &&
+    css`
+      visibility: hidden;
+      opacity: 0;
+      filter: blur(30px);
+    `};
 `;
 
 export const HorizontalScrollPanel = styled.div`
@@ -49,6 +71,14 @@ export const HorizontalScrollPanel = styled.div`
 
   overflow-x: scroll;
   scroll-behavior: smooth;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: none;
 
   ${hideScrollbar}
+`;
+
+export const ListContent = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: row;
 `;

@@ -66,10 +66,11 @@ export const Carousel = ({ children }: Props) => {
   return (
     <S.Container>
       <S.SideButton
+        className="previous"
         onClick={handleChangeScroll('previous')}
         visible={buttonVisible.previous}
       >
-        이전
+        P
       </S.SideButton>
       <S.HorizontalScrollPanel
         ref={scrollPanelRef}
@@ -78,10 +79,11 @@ export const Carousel = ({ children }: Props) => {
         <S.ListContent ref={listRef}>{children}</S.ListContent>
       </S.HorizontalScrollPanel>
       <S.SideButton
+        className="next"
         onClick={handleChangeScroll('next')}
         visible={buttonVisible.next}
       >
-        다음
+        N
       </S.SideButton>
     </S.Container>
   );

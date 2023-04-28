@@ -24,7 +24,7 @@ export const Default: Story = {
               width: '300px',
               height: '380px',
               marginRight: '24px',
-              backgroundColor: '#aeaeae',
+              backgroundColor: '#efefef',
             }}
           />
         ))}
