@@ -8,3 +8,4 @@ export { Card } from './Card/Card';
 export { Skeleton } from './Skeleton/Skeleton';
 export { Spacer } from './Spacer/Spacer';
 export { Loader } from './Loader/Loader';
+export { Carousel } from './Carousel/Carousel';
