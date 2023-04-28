@@ -1,19 +1,25 @@
 import { useEffect, useRef, useState } from 'react';
 import * as S from './Carousel.styles';
+import AngleRight from '~/components/vectors/AngleRight';
+import AngleLeft from '~/components/vectors/AngleLeft';
 
 interface Props {
   children: React.ReactNode;
 }
 
+interface ButtonVisible {
+  prev: boolean;
+  next: boolean;
+}
+
+type ScrollDirection = 'prev' | 'next';
+
 export const Carousel = ({ children }: Props) => {
   const scrollPanelRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
-  const [buttonVisible, setButtonVisible] = useState<{
-    previous: boolean;
-    next: boolean;
-  }>({
-    previous: false,
+  const [buttonVisible, setButtonVisible] = useState<ButtonVisible>({
+    prev: false,
     next: true,
   });
 
@@ -24,11 +30,11 @@ export const Carousel = ({ children }: Props) => {
 
     const { scrollWidth, scrollLeft, clientWidth } = scrollPanelRef.current;
 
-    const isPreviousButtonVisible = scrollLeft <= 0;
+    const isPrevButtonVisible = scrollLeft <= 0;
     const isNextButtonVisible = scrollWidth - clientWidth <= scrollLeft;
 
     setButtonVisible({
-      previous: isPreviousButtonVisible,
+      prev: isPrevButtonVisible,
       next: isNextButtonVisible,
     });
   };
@@ -47,12 +53,12 @@ export const Carousel = ({ children }: Props) => {
     childElementWidth.current = $firstChildElement.clientWidth;
   }, []);
 
-  const handleChangeScroll = (direction: 'previous' | 'next') => () => {
+  const handleChangeScroll = (direction: ScrollDirection) => () => {
     if (!scrollPanelRef.current) return;
 
     const { scrollWidth, scrollLeft, clientWidth } = scrollPanelRef.current;
     const scrollLocation =
-      direction === 'previous'
+      direction === 'prev'
         ? scrollLeft - childElementWidth.current
         : scrollLeft + childElementWidth.current;
     const isMoveable =
@@ -66,11 +72,11 @@ export const Carousel = ({ children }: Props) => {
   return (
     <S.Container>
       <S.SideButton
-        className="previous"
-        onClick={handleChangeScroll('previous')}
-        visible={buttonVisible.previous}
+        className="prev"
+        onClick={handleChangeScroll('prev')}
+        visible={buttonVisible.prev}
       >
-        P
+        <AngleLeft />
       </S.SideButton>
       <S.HorizontalScrollPanel
         ref={scrollPanelRef}
@@ -83,7 +89,7 @@ export const Carousel = ({ children }: Props) => {
         onClick={handleChangeScroll('next')}
         visible={buttonVisible.next}
       >
-        N
+        <AngleRight />
       </S.SideButton>
     </S.Container>
   );

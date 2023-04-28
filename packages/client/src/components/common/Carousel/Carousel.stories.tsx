@@ -12,6 +12,12 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// 랜덤 밝은 색 컬러 생성기
+const randomColor = () => {
+  const color = Math.floor(Math.random() * 16777215).toString(16);
+  return `#${color}`;
+};
+
 // More on writing stories with args: https://storybook.js.org/docs/7.0/react/writing-stories/args
 export const Default: Story = {
   args: {
@@ -24,7 +30,7 @@ export const Default: Story = {
               width: '300px',
               height: '380px',
               marginRight: '24px',
-              backgroundColor: '#efefef',
+              backgroundColor: randomColor(),
             }}
           />
         ))}

@@ -19,7 +19,7 @@ export const Container = styled.div`
   .next {
     right: 1rem;
   }
-  .previous {
+  .prev {
     left: 1rem;
   }
 `;
@@ -47,8 +47,8 @@ export const SideButton = styled.button<{ visible: boolean }>`
   background-color: rgba(0, 0, 0, 0.5);
   box-shadow: 0px 12px 48px rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(30px);
-  width: 50px;
-  height: 75px;
+  width: 54px;
+  height: 64px;
   filter: blur(1rem);
 
   transition: all 0.35s ease;
@@ -62,6 +62,12 @@ export const SideButton = styled.button<{ visible: boolean }>`
       opacity: 0;
       filter: blur(30px);
     `};
+
+  svg {
+    width: 32px;
+    height: 24px;
+    color: #fff;
+  }
 `;
 
 export const HorizontalScrollPanel = styled.div`
