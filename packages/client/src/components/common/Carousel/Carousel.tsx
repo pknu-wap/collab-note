@@ -40,12 +40,12 @@ export const Carousel = ({ children }: Props) => {
     updateButtonVisible();
   }, [children]);
 
-  // useEffect(() => {
-  //   const $firstChildElement = listRef.current?.firstElementChild;
+  useEffect(() => {
+    const $firstChildElement = listRef.current?.firstElementChild;
 
-  //   if (!$firstChildElement) return;
-  //   childElementWidth.current = $firstChildElement.clientWidth;
-  // }, []);
+    if (!$firstChildElement) return;
+    childElementWidth.current = $firstChildElement.clientWidth;
+  }, []);
 
   const handleChangeScroll = (direction: 'previous' | 'next') => () => {
     if (!scrollPanelRef.current) return;

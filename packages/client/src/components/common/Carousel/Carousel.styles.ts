@@ -35,6 +35,17 @@ export const SideButton = styled.button<{ visible: boolean }>`
   z-index: 5;
 `;
 
-export const ListContent = styled.div``;
+export const ListContent = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: row;
+`;
 
-export const HorizontalScrollPanel = styled.div``;
+export const HorizontalScrollPanel = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: row;
+
+  overflow-x: scroll;
+  scroll-behavior: smooth;
+`;
