@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { hideScrollbar } from '~/lib/styles';
 
 export const Container = styled.div`
   position: relative;
@@ -48,4 +49,6 @@ export const HorizontalScrollPanel = styled.div`
 
   overflow-x: scroll;
   scroll-behavior: smooth;
+
+  ${hideScrollbar}
 `;
