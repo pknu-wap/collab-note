@@ -6,8 +6,43 @@ import { CreateNoteDto } from './dto';
 export class NotesRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async findAllNotes() {
-    return await this.prismaService.note.findMany();
+  async findAllNotesList() {
+    const [list, totalCount] = await Promise.all([
+      this.prismaService.note.findMany({
+        include: {
+          ...noteListSelector,
+        },
+      }),
+      this.prismaService.note.count(),
+    ]);
+
+    return {
+      list,
+      totalCount,
+    };
+  }
+
+  async findNotesListByUserId(userId: number) {
+    const [list, totalCount] = await Promise.all([
+      this.prismaService.note.findMany({
+        where: {
+          ownerId: userId,
+        },
+        include: {
+          ...noteListSelector,
+        },
+      }),
+      this.prismaService.note.count({
+        where: {
+          ownerId: userId,
+        },
+      }),
+    ]);
+
+    return {
+      list,
+      totalCount,
+    };
   }
 
   async findNoteById(noteId: number) {
@@ -15,13 +50,8 @@ export class NotesRepository {
       where: {
         id: noteId,
       },
-    });
-  }
-
-  async findNotesByUserId(userId: number) {
-    return await this.prismaService.note.findMany({
-      where: {
-        ownerId: userId,
+      include: {
+        ...noteSelector,
       },
     });
   }
@@ -43,3 +73,28 @@ export class NotesRepository {
     });
   }
 }
+
+const noteSelector = {
+  owner: {
+    select: {
+      id: true,
+      username: true,
+      email: true,
+      displayName: true,
+      profileImage: true,
+    },
+  },
+};
+
+const noteListSelector = {
+  content: false,
+  owner: {
+    select: {
+      id: true,
+      username: true,
+      email: true,
+      displayName: true,
+      profileImage: true,
+    },
+  },
+};

@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { NotesService } from './notes.service';
 import { GetCurrentUser, Public } from '~/common/decorators';
-import { NoteResponseDto, CreateNoteDto } from './dto';
+import { NoteResponseDto, CreateNoteDto, NoteListResponseDto } from './dto';
 import { plainToInstance } from 'class-transformer';
 
 @ApiTags('notes')
@@ -12,9 +12,9 @@ export class NotesController {
 
   @Public()
   @Get()
-  async getAllNotes(): Promise<NoteResponseDto[]> {
-    const notes = await this.notesService.getAllNotes();
-    return plainToInstance(NoteResponseDto, notes);
+  async getAllNotesList(): Promise<NoteListResponseDto> {
+    const notes = await this.notesService.getAllNotesList();
+    return plainToInstance(NoteListResponseDto, notes);
   }
 
   @Public()
@@ -25,11 +25,11 @@ export class NotesController {
   }
 
   @Get('user/:userId')
-  async getNotesByUserId(
+  async getNotesListByUserId(
     @Param('userId') userId: number,
-  ): Promise<NoteResponseDto[]> {
-    const notes = await this.notesService.getNotesByUserId(userId);
-    return plainToInstance(NoteResponseDto, notes);
+  ): Promise<NoteListResponseDto> {
+    const notes = await this.notesService.getNotesListByUserId(userId);
+    return plainToInstance(NoteListResponseDto, notes);
   }
 
   @Post()

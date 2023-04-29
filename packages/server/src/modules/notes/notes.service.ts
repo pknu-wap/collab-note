@@ -6,19 +6,18 @@ import { CreateNoteDto } from './dto';
 export class NotesService {
   constructor(private readonly noteRepository: NotesRepository) {}
 
-  async getAllNotes() {
-    return await this.noteRepository.findAllNotes();
-  }
-
-  async getNotesByUserId(userId: number) {
-    return await this.noteRepository.findNotesByUserId(userId);
+  async getAllNotesList() {
+    return await this.noteRepository.findAllNotesList();
   }
 
   async getNoteById(noteId: number) {
     const note = await this.noteRepository.findNoteById(noteId);
     if (!note) throw new HttpException('Note not found', 404);
-
     return note;
+  }
+
+  async getNotesListByUserId(userId: number) {
+    return await this.noteRepository.findNotesListByUserId(userId);
   }
 
   async createNote(dto: CreateNoteDto, userId: number) {

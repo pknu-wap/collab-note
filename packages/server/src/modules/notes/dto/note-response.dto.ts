@@ -1,4 +1,4 @@
-import { Exclude, Expose } from 'class-transformer';
+import { Exclude, Expose, Type } from 'class-transformer';
 import { UserResponseDto } from '~/modules/users/dto/user-response.dto';
 
 @Exclude()
@@ -13,6 +13,7 @@ export class NoteResponseDto {
   content: JSON;
 
   @Expose()
+  @Type(() => UserResponseDto)
   owner: UserResponseDto;
 
   @Expose()
