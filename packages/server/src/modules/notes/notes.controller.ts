@@ -1,9 +1,8 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Param, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { NotesService } from './notes.service';
-import { CreateNoteDto } from './dto/create-post.dto';
 import { GetCurrentUser } from '~/common/decorators';
-import { NoteDto } from './dto/note.dto';
+import { NoteDto, CreateNoteDto } from './dto';
 import { plainToInstance } from 'class-transformer';
 
 @ApiTags('notes')
@@ -18,5 +17,13 @@ export class NotesController {
   ): Promise<NoteDto> {
     const note = await this.notesService.createNote(dto, userId);
     return plainToInstance(NoteDto, note);
+  }
+
+  @Post(':id')
+  async deleteNote(
+    @Param('noteId') noteId: number,
+    @GetCurrentUser('userId') userId: number,
+  ): Promise<void> {
+    await this.notesService.deleteNote(noteId, userId);
   }
 }
