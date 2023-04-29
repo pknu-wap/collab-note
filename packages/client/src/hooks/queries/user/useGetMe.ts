@@ -9,7 +9,7 @@ export const useGetMe = (
 };
 
 const getKey = () => ['useGetMe'];
-const fetcher = () => () => UserAPI.getMe();
+const fetcher = () => async () => await UserAPI.getMe();
 
 useGetMe.getKey = getKey;
 useGetMe.fetcher = fetcher;
