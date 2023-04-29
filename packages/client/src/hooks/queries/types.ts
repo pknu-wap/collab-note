@@ -11,7 +11,7 @@ export type UseQueryOptionsOf<T extends (...args: any) => any> =
     Awaited<ReturnType<T>>,
     Error,
     Awaited<ReturnType<T>>,
-    string[]
+    (string | number)[]
   >;
 
 export type UseInfiniteQueryOptionsOf<T extends (...args: any) => any> =
@@ -20,7 +20,7 @@ export type UseInfiniteQueryOptionsOf<T extends (...args: any) => any> =
     Error,
     Awaited<ReturnType<T>>,
     Awaited<ReturnType<T>>,
-    string[]
+    (string | number)[]
   >;
 
 export type UseMutationOptionsOf<T extends (...args: any) => any> =
