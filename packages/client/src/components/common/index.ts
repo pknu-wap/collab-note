@@ -9,3 +9,4 @@ export { Skeleton } from './Skeleton/Skeleton';
 export { Spacer } from './Spacer/Spacer';
 export { Loader } from './Loader/Loader';
 export { Carousel } from './Carousel/Carousel';
+export { Dropdown } from './Dropdown/Dropdown';
