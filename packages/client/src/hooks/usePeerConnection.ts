@@ -4,6 +4,7 @@ import noteSocket from '~/sockets/noteSocket';
 import useConnectedUsersStore from '~/stores/useConnectedUsersStore';
 import useMyMediaStreamStore from '~/stores/useMyMediaStreamStore';
 import useUserStreamsStore from '~/stores/useUserStreamsStore';
+
 const usePeerConnection = () => {
   const pcsRef = useRef<{ [sid: string]: RTCPeerConnection }>({});
   const { userStreams, setUserStreams } = useUserStreamsStore();

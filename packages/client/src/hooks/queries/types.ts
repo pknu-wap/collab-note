@@ -4,28 +4,26 @@ import {
   UseQueryOptions,
 } from '@tanstack/react-query';
 
-type Awaited<T> = T extends PromiseLike<infer U> ? Awaited<U> : T;
-
-export type UseQueryOptionsOf<T extends (...args: any) => any> =
+export type UseQueryOptionsOf<TAPI extends (...args: any) => any> =
   UseQueryOptions<
-    Awaited<ReturnType<T>>,
+    Awaited<ReturnType<TAPI>>,
     Error,
-    Awaited<ReturnType<T>>,
+    Awaited<ReturnType<TAPI>>,
     string[]
   >;
 
-export type UseInfiniteQueryOptionsOf<T extends (...args: any) => any> =
+export type UseInfiniteQueryOptionsOf<TAPI extends (...args: any) => any> =
   UseInfiniteQueryOptions<
-    Awaited<ReturnType<T>>,
+    Awaited<ReturnType<TAPI>>,
     Error,
-    Awaited<ReturnType<T>>,
-    Awaited<ReturnType<T>>,
+    Awaited<ReturnType<TAPI>>,
+    Awaited<ReturnType<TAPI>>,
     string[]
   >;
 
-export type UseMutationOptionsOf<T extends (...args: any) => any> =
+export type UseMutationOptionsOf<TAPI extends (...args: any) => any> =
   UseMutationOptions<
-    Awaited<ReturnType<T>>,
+    Awaited<ReturnType<TAPI>>,
     Error,
-    Parameters<T>[0] extends undefined ? void : Parameters<T>[0]
+    Parameters<TAPI>[0] extends undefined ? void : Parameters<TAPI>[0]
   >;
