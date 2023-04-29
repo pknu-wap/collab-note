@@ -8,3 +8,12 @@ export const glassmorphism = css`
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.18);
 `;
+
+export const hideScrollbar = css`
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
