@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '~/prisma/prisma.service';
 import { CreateNoteDto } from './dto';
-
 @Injectable()
 export class NotesRepository {
   constructor(private readonly prismaService: PrismaService) {}
@@ -59,7 +58,8 @@ export class NotesRepository {
   async createNote(dto: CreateNoteDto, userId: number) {
     return await this.prismaService.note.create({
       data: {
-        ...dto,
+        title: dto.title,
+        content: JSON.stringify(dto.content), //TODO: 이 부분 좀 봐야할 듯...
         ownerId: userId,
       },
     });

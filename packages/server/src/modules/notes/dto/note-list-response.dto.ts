@@ -6,6 +6,7 @@ export class NoteListResponseDto {
   @Expose()
   @Type(() => NoteResponseDto)
   // content is excluded because it's not needed in the list
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   @Transform(({ value }) => value.map(({ content, ...note }) => note))
   list: NoteResponseDto[];
 

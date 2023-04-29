@@ -13,8 +13,16 @@ export class NotesController {
   @Public()
   @Get()
   async getAllNotesList(): Promise<NoteListResponseDto> {
-    const notes = await this.notesService.getAllNotesList();
-    return plainToInstance(NoteListResponseDto, notes);
+    const notesList = await this.notesService.getAllNotesList();
+    return plainToInstance(NoteListResponseDto, notesList);
+  }
+
+  @Get('user/:userId')
+  async getNotesListByUserId(
+    @Param('userId') userId: number,
+  ): Promise<NoteListResponseDto> {
+    const notesList = await this.notesService.getNotesListByUserId(userId);
+    return plainToInstance(NoteListResponseDto, notesList);
   }
 
   @Public()
@@ -22,14 +30,6 @@ export class NotesController {
   async getNoteById(@Param('id') id: number): Promise<NoteResponseDto> {
     const note = await this.notesService.getNoteById(id);
     return plainToInstance(NoteResponseDto, note);
-  }
-
-  @Get('user/:userId')
-  async getNotesListByUserId(
-    @Param('userId') userId: number,
-  ): Promise<NoteListResponseDto> {
-    const notes = await this.notesService.getNotesListByUserId(userId);
-    return plainToInstance(NoteListResponseDto, notes);
   }
 
   @Post()
