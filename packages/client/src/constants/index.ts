@@ -12,11 +12,11 @@ export const API_URL = {
   },
   NOTE: {
     GET_ALL_NOTES_LIST: `${BASE_URL}/notes`,
-    GET_NOTE_BY_ID: (noteId: string) => `${BASE_URL}/notes/${noteId}`,
-    GET_NOTES_LIST_BY_USER_ID: (userId: string) =>
+    GET_NOTE_BY_ID: (noteId: number) => `${BASE_URL}/notes/${noteId}`,
+    GET_NOTES_LIST_BY_USER_ID: (userId: number) =>
       `${BASE_URL}/notes/user/${userId}`,
     CREATE_NOTE: `${BASE_URL}/notes`,
-    DELETE_NOTE: (noteId: string) => `${BASE_URL}/notes/${noteId}`,
+    DELETE_NOTE: (noteId: number) => `${BASE_URL}/notes/${noteId}`,
   },
 } as const;
 
