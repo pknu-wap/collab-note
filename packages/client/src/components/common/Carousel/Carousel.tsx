@@ -4,7 +4,7 @@ import AngleRight from '~/components/vectors/AngleRight';
 import AngleLeft from '~/components/vectors/AngleLeft';
 import useDebounce from '~/hooks/useDebounce';
 
-interface Props {
+export interface CarouselProps {
   children: React.ReactNode;
 }
 
@@ -18,7 +18,7 @@ type ScrollDirection = 'prev' | 'next';
 /**
  * @param children Carousel에 List 컴포넌트를 넣는다.
  */
-export const Carousel = ({ children }: Props) => {
+export const Carousel = ({ children }: CarouselProps) => {
   const scrollPanelRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
