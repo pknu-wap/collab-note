@@ -2,8 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import * as S from './Carousel.styles';
 import AngleRight from '~/components/vectors/AngleRight';
 import AngleLeft from '~/components/vectors/AngleLeft';
+import useDebounce from '~/hooks/useDebounce';
 
-interface Props {
+export interface CarouselProps {
   children: React.ReactNode;
 }
 
@@ -17,7 +18,7 @@ type ScrollDirection = 'prev' | 'next';
 /**
  * @param children Carousel에 List 컴포넌트를 넣는다.
  */
-export const Carousel = ({ children }: Props) => {
+export const Carousel = ({ children }: CarouselProps) => {
   const scrollPanelRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -43,6 +44,11 @@ export const Carousel = ({ children }: Props) => {
       next: nextButtonHidden,
     });
   };
+
+  const handleUpdateScroll = useDebounce({
+    value: updateButtonVisible,
+    delay: 100,
+  });
 
   // children이 바뀔 때마다 스크롤 위치를 초기화하고 버튼을 업데이트한다.
   useEffect(() => {
@@ -92,7 +98,7 @@ export const Carousel = ({ children }: Props) => {
       </S.SideButton>
       <S.HorizontalScrollPanel
         ref={scrollPanelRef}
-        onScroll={updateButtonVisible}
+        onScroll={handleUpdateScroll}
       >
         <S.ListContent ref={listRef}>{children}</S.ListContent>
       </S.HorizontalScrollPanel>
