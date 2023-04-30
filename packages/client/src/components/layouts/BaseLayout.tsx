@@ -22,6 +22,7 @@ const Content = styled.div`
   flex: 1;
   overflow: scroll;
   overflow-x: hidden;
+  background: #fff;
 `;
 
 export default BaseLayout;
