@@ -1,12 +1,10 @@
 // react
 import { useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 // hooks
 import useUser from '~/hooks/useUser';
 import useDisclosure from '~/hooks/useDisclosure';
 import useOnClickOutside from '~/hooks/useOnClickOutside';
-import useLogout from '~/hooks/useLogout';
 
 // components
 import * as S from './HeaderMenu.styles';
@@ -14,10 +12,17 @@ import { motion } from 'framer-motion';
 import { Avatar } from '~/components/common';
 import CaretDown from '~/components/vectors/CaretDown';
 
-const HeaderDropdown = () => {
+interface HeaderDropdownProps {
+  menuItemList: {
+    text: string;
+    onClick: () => void;
+    red: boolean;
+  }[];
+}
+
+const HeaderDropdown = ({ menuItemList }: HeaderDropdownProps) => {
   const user = useUser();
-  const logout = useLogout();
-  const navigate = useNavigate();
+
   const { isOpen, onClose, onToggle } = useDisclosure();
   const triggerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -27,35 +32,6 @@ const HeaderDropdown = () => {
       onClose();
     }
   });
-
-  //TODO: 메뉴 리스트 수정하기
-  const MenuItemList = [
-    {
-      text: 'My Page',
-      onClick: () => navigate(`/user/${user?.username}`),
-      red: false,
-    },
-    {
-      text: 'Posts',
-      onClick: () => navigate('/'),
-      red: false,
-    },
-    {
-      text: 'Search',
-      onClick: () => navigate('/search'),
-      red: false,
-    },
-    {
-      text: 'Setting',
-      onClick: () => navigate('/setting'),
-      red: false,
-    },
-    {
-      text: 'Logout',
-      onClick: logout,
-      red: true,
-    },
-  ];
 
   return (
     <motion.nav initial={false} animate={isOpen ? 'open' : 'closed'}>
@@ -90,7 +66,7 @@ const HeaderDropdown = () => {
         }}
         ref={contentRef}
       >
-        {MenuItemList.map((item) => (
+        {menuItemList.map((item) => (
           <S.MenuItem
             key={item.text}
             onClick={item.onClick}

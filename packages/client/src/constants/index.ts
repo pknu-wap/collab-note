@@ -1,10 +1,9 @@
 export const BASE_URL: string =
   import.meta.env.VITE_APP_BASE_URL || 'http://localhost:8080';
 
-export const GITHUB_OAUTH_LOGIN_URL = `${BASE_URL}/auth/github`;
-
 export const API_URL = {
   AUTH: {
+    GITHUB_OAUTH_LOGIN: `${BASE_URL}/auth/github`,
     LOGOUT: `${BASE_URL}/auth/logout`,
   },
   USER: {

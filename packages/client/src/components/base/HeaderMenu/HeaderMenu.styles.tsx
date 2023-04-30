@@ -7,7 +7,7 @@ export const DropdownButton = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: #888f96;
   cursor: pointer;
   transition: 0.2s ease-in-out;
   svg {
@@ -16,7 +16,7 @@ export const DropdownButton = styled.div`
     height: 16px;
   }
   &:hover {
-    color: #afb8c1;
+    color: #c3ced9;
   }
 `;
 export const DropdownMenu = styled(motion.div)`
@@ -40,7 +40,7 @@ export const UserInfo = styled.div`
   .username {
     font-size: 14px;
     font-weight: 500;
-    color: #ecedee;
+    color: #000000;
   }
   .displayName {
     font-size: 12px;
