@@ -23,6 +23,7 @@ const Content = styled.div`
   overflow: scroll;
   overflow-x: hidden;
   background: #fff;
+  padding-top: 4rem;
 `;
 
 export default BaseLayout;

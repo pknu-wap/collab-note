@@ -79,17 +79,17 @@ const Header = () => {
 };
 
 const Container = styled.header`
-  position: sticky;
+  position: fixed;
   top: 0;
   z-index: ${zIndexes.Header};
-  height: 90px;
   width: 100%;
+  height: 4rem;
   padding: 0px 16px;
 
   display: flex;
   align-items: center;
-  height: 4rem;
   padding: 0px 16px;
+  margin-bottom: 90px;
 
   background-color: rgba(255, 255, 255, 0.6);
   backdrop-filter: saturate(180%) blur(10px);
