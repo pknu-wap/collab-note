@@ -23,7 +23,7 @@ export const PAGE_LIST = {
   HOME: '/',
   MAIN: '/main',
   MY_PAGE: '/my-page',
-  NOTE: (noteId: string) => `/note/${noteId}`,
+  NOTE: (noteId: number) => `/note/${noteId}`,
   NOTE_CREATE: `/note/create`,
   SETTING: '/setting',
 } as const;

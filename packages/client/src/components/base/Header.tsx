@@ -29,6 +29,11 @@ const Header = () => {
       red: false,
     },
     {
+      text: 'Note-1',
+      onClick: () => navigate(`${PAGE_LIST.NOTE(1)}`),
+      red: false,
+    },
+    {
       text: 'My Page',
       onClick: () => navigate(`${PAGE_LIST.MY_PAGE}`),
       red: false,
