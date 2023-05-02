@@ -16,7 +16,7 @@ const MyNoteList = () => {
               height: '300px',
               paddingRight: '1rem',
               backgroundClip: 'content-box',
-              backgroundColor: `${idx % 2 == 0 ? '#70bbf5' : '#e7ffa9'}`,
+              backgroundColor: `${idx % 2 == 0 ? '#70bbf5' : '#edf9b2'}`,
             }}
           />
         ))}

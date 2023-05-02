@@ -4,7 +4,20 @@ const MyPublicList = () => {
   return (
     <Container>
       <Title>My Public List</Title>
-      <List></List>
+      <List>
+        {Array.from({ length: 30 }).map((_, idx) => (
+          <div
+            key={idx}
+            style={{
+              width: '100%',
+              height: '300px',
+              padding: '1rem',
+              backgroundClip: 'content-box',
+              backgroundColor: `${idx % 2 == 0 ? '#a9fbff' : '#abffba'}`,
+            }}
+          />
+        ))}
+      </List>
     </Container>
   );
 };
@@ -13,7 +26,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 90%;
-  height: 320px;
 `;
 
 const Title = styled.div`
@@ -22,9 +34,11 @@ const Title = styled.div`
 `;
 
 const List = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin-left: auto;
+  margin-right: auto;
+
   width: 100%;
   height: 100%;
   border: 1px solid rgba(0, 0, 0, 0.1);
