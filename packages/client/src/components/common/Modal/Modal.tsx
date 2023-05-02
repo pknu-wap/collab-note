@@ -14,7 +14,7 @@ export interface ModalProps {
   onCancel: () => void;
 }
 
-const Modal = ({
+export const Modal = ({
   visible,
   title,
   message,
@@ -80,5 +80,3 @@ const Modal = ({
     </Portal>
   );
 };
-
-export default Modal;
