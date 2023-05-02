@@ -22,6 +22,7 @@ const preview: Preview = {
       <ThemeProvider theme={lightTheme}>
         <GlobalStyle />
         <Story />
+        <div id="modal"></div>
       </ThemeProvider>
     ),
   ],
