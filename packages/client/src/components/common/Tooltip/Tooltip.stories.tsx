@@ -17,6 +17,8 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   height: 300px;
+  gap: 5rem;
+  margin-top: 5rem;
 `;
 
 export const Default: Story = {
@@ -33,6 +35,35 @@ export const Default: Story = {
   },
   args: {
     placement: 'top',
-    content: '나였으면~ 그대 사랑하는 사람~ 나였으면~',
+    content: 'Boooooom!',
+  },
+};
+
+export const Placement: Story = {
+  render: () => {
+    return (
+      <Container>
+        <Tooltip placement="left" content="Boooooom!">
+          <Button shadow size="md">
+            Left
+          </Button>
+        </Tooltip>
+        <Tooltip placement="top" content="Boooooom!">
+          <Button shadow size="md">
+            Top
+          </Button>
+        </Tooltip>
+        <Tooltip placement="bottom" content="Boooooom!">
+          <Button shadow size="md">
+            Bottom
+          </Button>
+        </Tooltip>
+        <Tooltip placement="right" content="Boooooom!">
+          <Button shadow size="md">
+            Right
+          </Button>
+        </Tooltip>
+      </Container>
+    );
   },
 };

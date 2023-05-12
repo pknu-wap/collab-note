@@ -9,7 +9,7 @@ export const StyledTooltipTrigger = styled.div`
 export const StyledTooltipContent = styled.div<{ visible: boolean }>`
   position: absolute;
   display: none;
-  background-color: #0072f5;
+  background-color: #ccc;
   border-radius: 14px;
   padding: 8px 12px;
   transition: opacity 0.25s ease 0s, top 0.25s ease 0s;
