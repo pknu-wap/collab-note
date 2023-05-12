@@ -7,12 +7,14 @@ export interface TooltipProps {
   children: React.ReactNode;
   placement?: Placement;
   content?: React.ReactNode;
+  offset?: number;
 }
 
 const Tooltip = ({
   children,
   placement = 'top',
   content,
+  offset,
   ...props
 }: TooltipProps) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -22,6 +24,7 @@ const Tooltip = ({
     placement,
     parent: ref,
     visible,
+    offset,
   };
 
   const handleChangeVisible = (nextState: boolean) => {

@@ -1,20 +1,40 @@
-import type { Meta, StoryObj } from '@storybook/react';
-
+import { Meta, StoryObj } from '@storybook/react';
 import Tooltip from './Tooltip';
+import styled from '@emotion/styled';
+import { Button } from '../index';
 
-// More on how to set up stories at: https://storybook.js.org/docs/7.0/react/writing-stories/introduction
 const meta = {
   title: 'Example/Tooltip',
   component: Tooltip,
   tags: ['autodocs'],
 } satisfies Meta<typeof Tooltip>;
-
 export default meta;
-type Story = StoryObj<typeof meta>;
 
-// More on writing stories with args: https://storybook.js.org/docs/7.0/react/writing-stories/args
+type Story = StoryObj<typeof Tooltip>;
+
+const TooltipWithHooks = (args: Story['args']) => {
+  return (
+    <Container>
+      <Tooltip {...args}>
+        <Button shadow size="md">
+          Hover Here
+        </Button>
+      </Tooltip>
+    </Container>
+  );
+};
+
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+`;
+
 export const Default: Story = {
+  render: (args) => <TooltipWithHooks {...args} />,
   args: {
-    children: 'Tooltip',
+    placement: 'top',
+    content: '나였으면~ 그대 사랑하는 사람~ 나였으면~',
   },
 };
