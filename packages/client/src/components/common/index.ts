@@ -11,3 +11,4 @@ export { Loader } from './Loader/Loader';
 export { Carousel } from './Carousel/Carousel';
 export { Avatar } from './Avatar/Avatar';
 export { Modal } from './Modal/Modal';
+export { default as Tooltip } from './Tooltip/Tooltip';
