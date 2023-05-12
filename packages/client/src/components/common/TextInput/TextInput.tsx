@@ -10,7 +10,7 @@ export interface Props extends InputHTMLAttributes<HTMLInputElement> {
   variant?: InputVariantType;
 }
 
-export const TextInput = forwardRef<HTMLInputElement, Props>(function TextInput(
+const TextInput = forwardRef<HTMLInputElement, Props>(function TextInput(
   { placeholder, color = 'primary', variant = 'bordered', ...props },
   ref,
 ) {
@@ -29,3 +29,5 @@ export const TextInput = forwardRef<HTMLInputElement, Props>(function TextInput(
     </S.Root>
   );
 });
+
+export default TextInput;

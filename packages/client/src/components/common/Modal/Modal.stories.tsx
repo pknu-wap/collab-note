@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { Modal } from './Modal';
+import Modal from './Modal';
 import useDisclosure from '~/hooks/useDisclosure';
 import styled from '@emotion/styled';
 import { Button } from '../index';

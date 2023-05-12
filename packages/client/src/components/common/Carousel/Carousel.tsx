@@ -18,7 +18,7 @@ type ScrollDirection = 'prev' | 'next';
 /**
  * @param children Carousel에 List 컴포넌트를 넣는다.
  */
-export const Carousel = ({ children }: CarouselProps) => {
+const Carousel = ({ children }: CarouselProps) => {
   const scrollPanelRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -112,3 +112,5 @@ export const Carousel = ({ children }: CarouselProps) => {
     </S.Container>
   );
 };
+
+export default Carousel;

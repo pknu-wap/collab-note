@@ -10,22 +10,22 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   shadow?: boolean;
 }
 
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  function Button(
-    { size = 'md', color = 'primary', children, shadow = false, ...options },
-    ref,
-  ) {
-    return (
-      <S.Container
-        size={size}
-        color={color}
-        shadow={shadow}
-        {...options}
-        ref={ref}
-      >
-        <Ripple />
-        {children}
-      </S.Container>
-    );
-  },
-);
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
+  { size = 'md', color = 'primary', children, shadow = false, ...options },
+  ref,
+) {
+  return (
+    <S.Container
+      size={size}
+      color={color}
+      shadow={shadow}
+      {...options}
+      ref={ref}
+    >
+      <Ripple />
+      {children}
+    </S.Container>
+  );
+});
+
+export default Button;

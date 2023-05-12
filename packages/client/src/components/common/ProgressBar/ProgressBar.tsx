@@ -6,7 +6,7 @@ export interface ProgressBarProps extends React.HTMLAttributes<HTMLDivElement> {
   duration?: `${number}s`;
 }
 
-export const ProgressBar = ({
+const ProgressBar = ({
   percent = 0,
   animation = 'unset',
   duration = '0s',
@@ -23,3 +23,5 @@ export const ProgressBar = ({
     </S.Container>
   );
 };
+
+export default ProgressBar;

@@ -26,7 +26,7 @@ export interface ToggleProps extends InputHTMLAttributes<HTMLInputElement> {
  * <Toggle labelText="Toggle" color="error" variant="lg" />
  * ```
  */
-export const Toggle = forwardRef<HTMLInputElement, ToggleProps>(function Toggle(
+const Toggle = forwardRef<HTMLInputElement, ToggleProps>(function Toggle(
   { labelText = '', color = 'primary', variant = 'sm', ...options },
   ref,
 ) {
@@ -44,3 +44,5 @@ export const Toggle = forwardRef<HTMLInputElement, ToggleProps>(function Toggle(
     </S.ToggleLabel>
   );
 });
+
+export default Toggle;

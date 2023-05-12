@@ -21,3 +21,5 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(function Checkbox(
     </S.CheckboxLabel>
   );
 });
+
+export default Checkbox;
