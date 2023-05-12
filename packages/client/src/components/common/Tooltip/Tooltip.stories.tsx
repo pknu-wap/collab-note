@@ -12,18 +12,6 @@ export default meta;
 
 type Story = StoryObj<typeof Tooltip>;
 
-const TooltipWithHooks = (args: Story['args']) => {
-  return (
-    <Container>
-      <Tooltip {...args}>
-        <Button shadow size="md">
-          Hover Here
-        </Button>
-      </Tooltip>
-    </Container>
-  );
-};
-
 const Container = styled.div`
   display: flex;
   justify-content: center;
@@ -32,7 +20,17 @@ const Container = styled.div`
 `;
 
 export const Default: Story = {
-  render: (args) => <TooltipWithHooks {...args} />,
+  render: (args) => {
+    return (
+      <Container>
+        <Tooltip {...args}>
+          <Button shadow size="md">
+            Hover Here
+          </Button>
+        </Tooltip>
+      </Container>
+    );
+  },
   args: {
     placement: 'top',
     content: '나였으면~ 그대 사랑하는 사람~ 나였으면~',
