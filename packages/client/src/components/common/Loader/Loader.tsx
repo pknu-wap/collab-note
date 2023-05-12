@@ -6,7 +6,7 @@ export interface LoaderProps {
   color?: NormalColorType;
 }
 
-export const Loader = ({ size = 'md', color = 'primary' }: LoaderProps) => {
+const Loader = ({ size = 'md', color = 'primary' }: LoaderProps) => {
   return (
     <S.Container size={size}>
       {[0, 0.1, 0.2, 0.3, 0.4].map((number) => (
@@ -15,3 +15,5 @@ export const Loader = ({ size = 'md', color = 'primary' }: LoaderProps) => {
     </S.Container>
   );
 };
+
+export default Loader;

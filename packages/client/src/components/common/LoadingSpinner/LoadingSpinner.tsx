@@ -1,5 +1,7 @@
 import * as S from './LoadingSpinner.styles';
 
-export const LoadingSpinner = () => {
+const LoadingSpinner = () => {
   return <S.Spinner />;
 };
+
+export default LoadingSpinner;

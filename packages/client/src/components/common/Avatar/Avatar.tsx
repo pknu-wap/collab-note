@@ -9,7 +9,7 @@ export interface AvatarProps {
   isBorder?: boolean;
 }
 
-export const Avatar = ({
+const Avatar = ({
   src,
   alt = 'profile image',
   size = 'md',
@@ -22,3 +22,5 @@ export const Avatar = ({
     </S.Container>
   );
 };
+
+export default Avatar;

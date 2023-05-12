@@ -8,14 +8,11 @@ export interface Props {
   isPressable?: boolean;
 }
 
-export const Card = ({
-  children,
-  variant = 'shadow',
-  isPressable = false,
-}: Props) => {
+const Card = ({ children, variant = 'shadow', isPressable = false }: Props) => {
   return (
     <S.Root variant={variant} isPressable={isPressable}>
       {children}
     </S.Root>
   );
 };
+export default Card;

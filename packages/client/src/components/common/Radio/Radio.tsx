@@ -8,7 +8,7 @@ export interface Props extends InputHTMLAttributes<HTMLInputElement> {
   labelColor?: boolean;
 }
 
-export const Radio = forwardRef<HTMLInputElement, Props>(function Radio(
+const Radio = forwardRef<HTMLInputElement, Props>(function Radio(
   { labelText = '', labelColor = false, color = 'primary', ...options },
   ref,
 ) {
@@ -22,3 +22,5 @@ export const Radio = forwardRef<HTMLInputElement, Props>(function Radio(
     </S.RadioLabel>
   );
 });
+
+export default Radio;
